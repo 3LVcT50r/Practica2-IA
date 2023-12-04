@@ -29,6 +29,11 @@
 #    Data properties
 #################################################################
 
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#titulo
+:titulo rdf:type owl:DatatypeProperty ;
+        rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
 ###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#edad
 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#edad> rdf:type owl:DatatypeProperty ;
                                                                                rdfs:subPropertyOf owl:topDataProperty ;
@@ -107,6 +112,29 @@ owl:topDataProperty rdf:type owl:FunctionalProperty ;
 #################################################################
 #    Individuals
 #################################################################
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Autor1
+:Autor1 rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Libro0
+:Libro0 rdf:type owl:NamedIndividual ,
+                 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> ;
+        :titulo "Romeo_y_Julieta" .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Libro1
+:Libro1 rdf:type owl:NamedIndividual ,
+                 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> ;
+        :titulo "McBeth" .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Shakespeare
+:Shakespeare rdf:type owl:NamedIndividual ,
+                      <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor> ;
+             <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_escrito> :Libro0 ,
+                                                                                                  :Libro1 .
+
 
 ###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Accion
 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Accion> rdf:type owl:NamedIndividual ,
