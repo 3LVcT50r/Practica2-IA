@@ -12,6 +12,12 @@
 #    Object Properties
 #################################################################
 
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#es_de
+:es_de rdf:type owl:ObjectProperty ;
+       rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> ;
+       rdfs:range <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
 ###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_escrito
 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_escrito> rdf:type owl:ObjectProperty ;
                                                                                      rdfs:subPropertyOf owl:topObjectProperty ;
@@ -66,6 +72,11 @@ owl:topDataProperty rdf:type owl:FunctionalProperty ;
 #    Classes
 #################################################################
 
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Longitud
+:Longitud rdf:type owl:Class ;
+          rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
 ###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor
 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor> rdf:type owl:Class ;
                                                                                 rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> .
@@ -114,12 +125,24 @@ owl:topDataProperty rdf:type owl:FunctionalProperty ;
 #################################################################
 
 ###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Autor1
-:Autor1 rdf:type owl:NamedIndividual .
+:Autor1 rdf:type owl:NamedIndividual ,
+                 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Corto
+:Corto rdf:type owl:NamedIndividual ,
+                :Longitud .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Largo
+:Largo rdf:type owl:NamedIndividual ,
+                :Longitud .
 
 
 ###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Libro0
 :Libro0 rdf:type owl:NamedIndividual ,
                  <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> ;
+        :es_de <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Romance> ;
         :titulo "Romeo_y_Julieta" .
 
 
@@ -127,6 +150,11 @@ owl:topDataProperty rdf:type owl:FunctionalProperty ;
 :Libro1 rdf:type owl:NamedIndividual ,
                  <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> ;
         :titulo "McBeth" .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Promedio
+:Promedio rdf:type owl:NamedIndividual ,
+                   :Longitud .
 
 
 ###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Shakespeare
