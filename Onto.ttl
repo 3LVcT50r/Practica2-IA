@@ -1,0 +1,324 @@
+@prefix : <http://www.semanticweb.org/santi/ontologies/2023/11/Onto/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/santi/ontologies/2023/11/Onto/> .
+
+<http://www.semanticweb.org/santi/ontologies/2023/11/Onto> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_escrito
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_escrito> rdf:type owl:ObjectProperty ;
+                                                                                     rdfs:subPropertyOf owl:topObjectProperty ;
+                                                                                     rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor> ;
+                                                                                     rdfs:range <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_leido
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_leido> rdf:type owl:ObjectProperty ;
+                                                                                   rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Lector> ;
+                                                                                   rdfs:range <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#titulo
+:titulo rdf:type owl:DatatypeProperty ;
+        rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#edad
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#edad> rdf:type owl:DatatypeProperty ;
+                                                                               rdfs:subPropertyOf owl:topDataProperty ;
+                                                                               rdf:type owl:FunctionalProperty ;
+                                                                               rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> ;
+                                                                               rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#nombre
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#nombre> rdf:type owl:DatatypeProperty ;
+                                                                                 rdfs:subPropertyOf owl:topDataProperty ;
+                                                                                 rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#sexo
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#sexo> rdf:type owl:DatatypeProperty ;
+                                                                               rdfs:subPropertyOf owl:topDataProperty ;
+                                                                               rdf:type owl:FunctionalProperty ;
+                                                                               rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> ;
+                                                                               rdfs:range xsd:string .
+
+
+###  http://www.w3.org/2002/07/owl#topDataProperty
+owl:topDataProperty rdf:type owl:FunctionalProperty ;
+                    rdfs:domain <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> ;
+                    rdfs:range xsd:string .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor> rdf:type owl:Class ;
+                                                                                rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Demografía
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Demografía> rdf:type owl:Class ;
+                                                                                     rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Dificultad
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Dificultad> rdf:type owl:Class ;
+                                                                                     rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> rdf:type owl:Class ;
+                                                                                 rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Lector
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Lector> rdf:type owl:Class ;
+                                                                                 rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Persona> rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> rdf:type owl:Class ;
+                                                                                rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Época
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Época> rdf:type owl:Class ;
+                                                                                rdfs:subClassOf <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Autor1
+:Autor1 rdf:type owl:NamedIndividual .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Libro0
+:Libro0 rdf:type owl:NamedIndividual ,
+                 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> ;
+        :titulo "Romeo_y_Julieta" .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Libro1
+:Libro1 rdf:type owl:NamedIndividual ,
+                 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Libro> ;
+        :titulo "McBeth" .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/Onto#Shakespeare
+:Shakespeare rdf:type owl:NamedIndividual ,
+                      <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Autor> ;
+             <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#ha_escrito> :Libro0 ,
+                                                                                                  :Libro1 .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Accion
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Accion> rdf:type owl:NamedIndividual ,
+                                                                                          <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Adulta_Femenina
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Adulta_Femenina> rdf:type owl:NamedIndividual ,
+                                                                                                   <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Demografía> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Adulta_Masculina
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Adulta_Masculina> rdf:type owl:NamedIndividual ,
+                                                                                                    <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Demografía> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Asesinato
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Asesinato> rdf:type owl:NamedIndividual ,
+                                                                                             <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Aventura
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Aventura> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Ciencia_Ficcion
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Ciencia_Ficcion> rdf:type owl:NamedIndividual ,
+                                                                                                   <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Clásica
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Clásica> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Época> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Comedia
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Comedia> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Contemporánea
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Contemporánea> rdf:type owl:NamedIndividual ,
+                                                                                                 <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Época> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Cósmico
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Cósmico> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Distopia
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Distopia> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Drama
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Drama> rdf:type owl:NamedIndividual ,
+                                                                                         <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Díficil
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Díficil> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Dificultad> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Espacial
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Espacial> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Fantasia
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Fantasia> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Fácil
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Fácil> rdf:type owl:NamedIndividual ,
+                                                                                         <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Dificultad> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Infantil
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Infantil> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Demografía> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Intermedia
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Intermedia> rdf:type owl:NamedIndividual ,
+                                                                                              <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Dificultad> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Juvenil_Femenina
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Juvenil_Femenina> rdf:type owl:NamedIndividual ,
+                                                                                                    <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Demografía> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Juvenil_Masculina
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Juvenil_Masculina> rdf:type owl:NamedIndividual ,
+                                                                                                     <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Demografía> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Medieval
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Medieval> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Militar
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Militar> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Misterio
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Misterio> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Mitologia
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Mitologia> rdf:type owl:NamedIndividual ,
+                                                                                             <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Oeste
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Oeste> rdf:type owl:NamedIndividual ,
+                                                                                         <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Pirata
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Pirata> rdf:type owl:NamedIndividual ,
+                                                                                          <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Policíaco
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Policíaco> rdf:type owl:NamedIndividual ,
+                                                                                             <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Psicológico
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Psicológico> rdf:type owl:NamedIndividual ,
+                                                                                               <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Romance
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Romance> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Samurai
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Samurai> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Sobrenatural
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Sobrenatural> rdf:type owl:NamedIndividual ,
+                                                                                                <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Superheroes
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Superheroes> rdf:type owl:NamedIndividual ,
+                                                                                               <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Survival
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Survival> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Suspense
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Suspense> rdf:type owl:NamedIndividual ,
+                                                                                            <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Terror
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Terror> rdf:type owl:NamedIndividual ,
+                                                                                          <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Género> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Urbano
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Urbano> rdf:type owl:NamedIndividual ,
+                                                                                          <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Vikingo
+<http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Vikingo> rdf:type owl:NamedIndividual ,
+                                                                                           <http://www.semanticweb.org/santi/ontologies/2023/11/untitled-ontology-8#Temas> .
+
+
+###  Generated by the OWL API (version 4.5.26.2023-07-17T20:34:13Z) https://github.com/owlcs/owlapi
