@@ -1,0 +1,353 @@
+@prefix : <http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/> .
+
+<http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#tieneNovela
+:tieneNovela rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf owl:topObjectProperty ;
+             rdfs:domain :Caracteristica ;
+             rdfs:range :NovelaFiccion .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/haEscrito
+:haEscrito rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf owl:topObjectProperty ;
+           rdfs:domain :Autor ;
+           rdfs:range :NovelaFiccion .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/haLeido
+:haLeido rdf:type owl:ObjectProperty ;
+         rdfs:subPropertyOf owl:topObjectProperty ;
+         rdfs:domain :Lector ;
+         rdfs:range :NovelaFiccion .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/tieneCaracteristica
+:tieneCaracteristica rdf:type owl:ObjectProperty ;
+                     rdfs:subPropertyOf owl:topObjectProperty ;
+                     rdfs:domain :NovelaFiccion ;
+                     rdfs:range :Caracteristica .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/edad
+:edad rdf:type owl:DatatypeProperty ;
+      rdfs:subPropertyOf owl:topDataProperty ;
+      rdf:type owl:FunctionalProperty ;
+      rdfs:domain :Lector ;
+      rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/nombre
+:nombre rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf owl:topDataProperty ;
+        rdf:type owl:FunctionalProperty ;
+        rdfs:domain :Caracteristica ,
+                    :Lector ;
+        rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/sexo
+:sexo rdf:type owl:DatatypeProperty ;
+      rdfs:subPropertyOf owl:topDataProperty ;
+      rdf:type owl:FunctionalProperty ;
+      rdfs:domain :Lector ;
+      rdfs:range xsd:int .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/titulo
+:titulo rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf owl:topDataProperty ;
+        rdf:type owl:FunctionalProperty ;
+        rdfs:domain :NovelaFiccion ;
+        rdfs:range xsd:string .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Autor
+:Autor rdf:type owl:Class ;
+       rdfs:subClassOf :Caracteristica .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Caracteristica
+:Caracteristica rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Demografia
+:Demografia rdf:type owl:Class ;
+            rdfs:subClassOf :Caracteristica .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Dificultad
+:Dificultad rdf:type owl:Class ;
+            rdfs:subClassOf :Caracteristica .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Genero
+:Genero rdf:type owl:Class ;
+        rdfs:subClassOf :Caracteristica .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Lector
+:Lector rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/NovelaFiccion
+:NovelaFiccion rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Tema
+:Tema rdf:type owl:Class ;
+      rdfs:subClassOf :Caracteristica .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#autor0
+:autor0 rdf:type owl:NamedIndividual ,
+                 :Autor ;
+        :haEscrito :libro0 ;
+        :nombre "Nicolas Longueira" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#libro0
+:libro0 rdf:type owl:NamedIndividual ,
+                 :NovelaFiccion ;
+        :tieneCaracteristica :Adulta_masculina ,
+                             :Aventura ,
+                             :Dificil ,
+                             :Fantasia ,
+                             :Viajes_en_el_tiempo ;
+        :titulo "Las desgracias del elfo adulto" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Accion
+:Accion rdf:type owl:NamedIndividual ,
+                 :Genero ;
+        :nombre "Accion" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Adulta_femenina
+:Adulta_femenina rdf:type owl:NamedIndividual ,
+                          :Demografia ;
+                 :nombre "Adulta_femenina" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Adulta_masculina
+:Adulta_masculina rdf:type owl:NamedIndividual ,
+                           :Demografia ;
+                  :nombre "Adulta_masculina" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Aventura
+:Aventura rdf:type owl:NamedIndividual ,
+                   :Genero ;
+          :nombre "Aventura" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/CienciaFiccion
+:CienciaFiccion rdf:type owl:NamedIndividual ,
+                         :Genero ;
+                :nombre "Ciencia ficcion" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Comedia
+:Comedia rdf:type owl:NamedIndividual ,
+                  :Genero ;
+         :nombre "Comedia" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Crimen_organizado
+:Crimen_organizado rdf:type owl:NamedIndividual ,
+                            :Tema ;
+                   :nombre "Crimen organizado" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Dificil
+:Dificil rdf:type owl:NamedIndividual ,
+                  :Dificultad ;
+         :nombre "Dificil" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Drama
+:Drama rdf:type owl:NamedIndividual ,
+                :Genero ;
+       :nombre "Drama" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Espacial
+:Espacial rdf:type owl:NamedIndividual ,
+                   :Tema ;
+          :nombre "Espacial" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Facil
+:Facil rdf:type owl:NamedIndividual ,
+                :Dificultad ;
+       :nombre "Facil" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Fantasia
+:Fantasia rdf:type owl:NamedIndividual ,
+                   :Genero ;
+          :nombre "Fantasia" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Infantil
+:Infantil rdf:type owl:NamedIndividual ,
+                   :Demografia ;
+          :nombre "Infantil" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Intermedia
+:Intermedia rdf:type owl:NamedIndividual ,
+                     :Dificultad ;
+            :nombre "Intermedia" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Juvenil_femenina
+:Juvenil_femenina rdf:type owl:NamedIndividual ,
+                           :Demografia ;
+                  :nombre "Juvenil_femenina" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Juvenil_masculina
+:Juvenil_masculina rdf:type owl:NamedIndividual ,
+                            :Demografia ;
+                   :nombre "Juvenil_masculina" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Medieval
+:Medieval rdf:type owl:NamedIndividual ,
+                   :Tema ;
+          :nombre "Medieval" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Militar
+:Militar rdf:type owl:NamedIndividual ,
+                  :Tema ;
+         :nombre "Militar" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Misterio
+:Misterio rdf:type owl:NamedIndividual ,
+                   :Genero ;
+          :nombre "Misterio" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Mitologia
+:Mitologia rdf:type owl:NamedIndividual ,
+                    :Tema ;
+           :nombre "Mitologia" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Oeste
+:Oeste rdf:type owl:NamedIndividual ,
+                :Tema ;
+       :nombre "Oeste" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Pirata
+:Pirata rdf:type owl:NamedIndividual ,
+                 :Tema ;
+        :nombre "Pirata" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Policiaco
+:Policiaco rdf:type owl:NamedIndividual ,
+                    :Tema ;
+           :nombre "Policiaco" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Psicologico
+:Psicologico rdf:type owl:NamedIndividual ,
+                      :Tema ;
+             :nombre "Psicologico" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Romance
+:Romance rdf:type owl:NamedIndividual ,
+                  :Genero ;
+         :nombre "Romance" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Samurai
+:Samurai rdf:type owl:NamedIndividual ,
+                  :Tema ;
+         :nombre "Samurai" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Sobrenatural
+:Sobrenatural rdf:type owl:NamedIndividual ,
+                       :Genero ;
+              :nombre "Sobrenatural" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Superheroes
+:Superheroes rdf:type owl:NamedIndividual ,
+                      :Tema ;
+             :nombre "Superheroes" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Supervivencia
+:Supervivencia rdf:type owl:NamedIndividual ,
+                        :Tema ;
+               :nombre "Supervivencia" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Suspense
+:Suspense rdf:type owl:NamedIndividual ,
+                   :Genero ;
+          :nombre "Suspense" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Terror
+:Terror rdf:type owl:NamedIndividual ,
+                 :Genero ;
+        :nombre "Terror" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Urbano
+:Urbano rdf:type owl:NamedIndividual ,
+                 :Tema ;
+        :nombre "Urbano" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Vampiros
+:Vampiros rdf:type owl:NamedIndividual ,
+                   :Tema ;
+          :nombre "Vampiros" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Viajes_en_el_tiempo
+:Viajes_en_el_tiempo rdf:type owl:NamedIndividual ,
+                              :Tema ;
+                     :nombre "Viajes en el tiempo" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Vikingos
+:Vikingos rdf:type owl:NamedIndividual ,
+                   :Tema ;
+          :nombre "Vikingos" .
+
+
+###  Generated by the OWL API (version 4.5.26.2023-07-17T20:34:13Z) https://github.com/owlcs/owlapi
