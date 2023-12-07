@@ -132,7 +132,8 @@
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#libro0
 :libro0 rdf:type owl:NamedIndividual ,
                  :NovelaFiccion ;
-        :tieneCaracteristica :Adulta_masculina ,
+        :tieneCaracteristica :autor0 ,
+                             :Adulta_masculina ,
                              :Aventura ,
                              :Dificil ,
                              :Fantasia ,
