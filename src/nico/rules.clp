@@ -116,7 +116,7 @@
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
-	(bind ?sexo (ask-int "Sexo: Mujer(0) o Hombre(1) "))
+	(bind ?sexo (ask-int "Sexo: Mujer(M) o Hombre(H) "))
     (send ?x put-sexo ?sexo)
 )
 
@@ -174,6 +174,24 @@
 	(modify ?pref (temas $?respuesta))
 	)
 	(focus RESPUESTA)
+)
+
+;ESTO NO VA A COMPILAR HASTA QUE SE LE AGREGUE UNA FRECUENCIA AL LECTOR
+(defrule PREGUNTAS::askFrecuencia
+	(newLector)
+    ?x <- (object(is-a Lector))
+	=>
+	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2)"))
+    (send ?x put-freq ?freq)
+)
+
+;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAÑO
+(defrule PREGUNTAS::askLugar
+	(newLector)
+    ?x <- (object(is-a Lector))
+	=>
+	(bind ?freq (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
+    (send ?x put-freq ?freq)
 )
 
 
