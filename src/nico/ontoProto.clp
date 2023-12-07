@@ -65,6 +65,12 @@
     (slot sexo
         (type INTEGER)
         (create-accessor read-write))
+    (slot freq
+        (type INTEGER)
+        (create-accessor read-write))
+    (slot lugar
+        (type INTEGER)
+        create-accessor read-write))
 )
 
 (defclass NovelaFiccion
