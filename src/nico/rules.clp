@@ -190,8 +190,11 @@
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
-	(bind ?freq (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
-    (send ?x put-freq ?freq)
+	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
+    ;(send ?x put-lugar ?lugar)
+	(if (eq ?lugar TRUE)
+	then (send ?x put-lugar 1)
+	else (send ?x put-lugar 0))
 )
 
 
