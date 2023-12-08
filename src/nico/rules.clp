@@ -81,8 +81,15 @@
 	(multislot generos (type INSTANCE))
 )
 
+(deftemplate MAIN::prefvar
+	(multislot pref (type INSTANCE))
+)
 
-(defrule initial
+(deftemplate MAIN::recomendaciones
+	(multislot libros (type INSTANCE))
+)
+
+(defrule MAIN::initial
     (initial-fact)
     =>
     (printout t "----BIENVENIDOS AL SISTEMA DE RECOMENDACION DE LIBROS----" crlf)
@@ -91,7 +98,9 @@
     (focus PREGUNTAS)
 )
 
-;Aqui estan las preguntas
+; *******************************************************
+;               	PREGUNTAS               
+; *******************************************************
 (defmodule PREGUNTAS (export ?ALL) (import MAIN ?ALL))
 
 
@@ -122,12 +131,15 @@
 
 
 (deffacts PREGUNTAS::hechos-iniciales "Establece hechos para poder recopilar informacion"
+	(tema ask)
+	(genero ask)
 	(preferencias)
 )
 
 (defrule PREGUNTAS::askGenero
     (newLector)
 	?pref <- (preferencias)
+	?f <- (genero ask)
 	=>
 	(bind ?e (pregunta-si-no "Esta interesado en algun(os) genero(os) en concreto?"))
 	(if (eq ?e TRUE)
@@ -148,11 +160,13 @@
 	)
 	(modify ?pref (generos $?respuesta))
 	)
+	(retract ?f)
 )
 
 (defrule PREGUNTAS::askTema
     (newLector)
 	?pref <- (preferencias)
+	?f <- (tema ask)
 	=>
 	(bind ?e (pregunta-si-no "Esta interesado en algun(os) tema(s) en concreto?"))
 	(if (eq ?e TRUE)
@@ -173,49 +187,124 @@
 	)
 	(modify ?pref (temas $?respuesta))
 	)
+	(retract ?f)
+	(focus INFERENCIA)
+)
+
+;;ESTO NO VA A COMPILAR HASTA QUE SE LE AGREGUE UNA FRECUENCIA AL LECTOR
+;(defrule PREGUNTAS::askFrecuencia
+;	(newLector)
+;    ?x <- (object(is-a Lector))
+;	=>
+;	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2)"))
+;    (send ?x put-freq ?freq)
+;)
+;
+;;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAÑO
+;(defrule PREGUNTAS::askLugar
+;	(newLector)
+;    ?x <- (object(is-a Lector))
+;	=>
+;	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
+;    ;(send ?x put-lugar ?lugar)
+;	(if (eq ?lugar TRUE)
+;	then (send ?x put-lugar 1)
+;	else (send ?x put-lugar 0))
+;)
+
+
+
+; *******************************************************
+;               	ABSTRACCION                 
+; *******************************************************
+;(defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
+
+; *******************************************************
+;               	INFERENCIA                  
+; *******************************************************
+(defmodule INFERENCIA (import MAIN ?ALL) (import PREGUNTAS ?ALL)(export ?ALL))
+
+(deffacts hechos-iniciales "Establece hechos para poder recopilar informacion"
+	(prefvar)
+	(recomendaciones)
+	(do conjunto)
+	(do recomendados)
+)
+
+(defrule conjutno-preferencias
+	?u <- (preferencias (generos $?generos)(autores $?autores)(temas $?temas))
+	?pref <- (prefvar)
+	?f <- (do conjunto)
+	=>
+	(bind $?respuesta (create$ ))
+	(loop-for-count (?i 1 (length$ $?generos)) do
+		(bind ?curr-atr (nth$ ?i $?generos))
+		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
+	)
+	(loop-for-count (?i 1 (length$ $?autores)) do
+		(bind ?curr-atr (nth$ ?i $?autores))
+		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
+	)
+	(loop-for-count (?i 1 (length$ $?temas)) do
+		(bind ?curr-atr (nth$ ?i $?temas))
+		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
+	)
+	;(assert (conj-pref (pref $?respuesta)))
+	(modify ?pref (pref $?respuesta))
+	(retract ?f)
+)
+
+
+(deffunction existeUna (?carInst $?pref)
+  (loop-for-count (?i 1 (length$ $?pref)) do
+    (bind ?curr-atr (nth$ ?i $?pref))
+    (if (member$ ?curr-atr ?carInst)
+      then (return TRUE)
+    )
+  )
+  FALSE
+)
+
+(defrule libros-recomendados
+	?u <- (prefvar (pref $?pref))
+	?recom <- (recomendaciones)
+	?f <- (do recomendados)
+	=>
+	(bind $?respuesta (create$ ))
+	(bind $?obj-libros (find-all-instances ((?inst NovelaFiccion)) TRUE))
+	(loop-for-count (?i 1 (length$ $?obj-libros)) do
+		(bind ?curr-obj (nth$ ?i ?obj-libros))
+		(bind $?carInst (send ?curr-obj get-tieneCaracteristica))
+		(if (existeUna $?carInst $?pref) then
+			(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-obj))
+		)
+	)
+	(modify ?recom (libros ?respuesta))
+	(retract ?f)
 	(focus RESPUESTA)
 )
 
-;ESTO NO VA A COMPILAR HASTA QUE SE LE AGREGUE UNA FRECUENCIA AL LECTOR
-(defrule PREGUNTAS::askFrecuencia
-	(newLector)
-    ?x <- (object(is-a Lector))
-	=>
-	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2)"))
-    (send ?x put-freq ?freq)
-)
 
-;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAÑO
-(defrule PREGUNTAS::askLugar
-	(newLector)
-    ?x <- (object(is-a Lector))
-	=>
-	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
-    ;(send ?x put-lugar ?lugar)
-	(if (eq ?lugar TRUE)
-	then (send ?x put-lugar 1)
-	else (send ?x put-lugar 0))
-)
+; *******************************************************
+;               	ASSIGNACIONES               
+; *******************************************************
+;(defmodule ASSIGNACIO (import MAIN ?ALL) (import PREGUNTAS ?ALL)(import INFERENCIA ?ALL)(export ?ALL))
 
-
-
-;Aqui estan las abstracciones
-(defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
-
-;Aqui estan las infirencias
-(defmodule INFERENCIA (import MAIN ?ALL) (import PREGUNTAS ?ALL)(import ABSTRACCION ?ALL)(export ?ALL))
-
-;Aqui estan las asignaciones
-(defmodule ASSIGNACIO (import MAIN ?ALL) (import PREGUNTAS ?ALL)(import INFERENCIA ?ALL)(import ABSTRACCION ?ALL)(export ?ALL))
-
-;Aqui esta la respuesta
-(defmodule RESPUESTA (import MAIN ?ALL) (import PREGUNTAS ?ALL)(import ABSTRACCION ?ALL)(import INFERENCIA ?ALL)(import ASSIGNACIO ?ALL)(export ?ALL))
+; *******************************************************
+;               	RESPUESTA               
+; *******************************************************
+(defmodule RESPUESTA (import MAIN ?ALL) (import PREGUNTAS ?ALL)(import INFERENCIA ?ALL)(export ?ALL))
 
 (defrule RESPUESTA::printRecomendacion
+	?u <- (recomendaciones (libros $?libros))
 	(newLector)
 	=>
 	(printout t crlf)
 	(printout t "A partir de tus gustos y caracteriseticas te recomendamos: " crlf)
+	(loop-for-count (?i 1 3) do
+		(bind ?curr-obj (nth$ ?i $?libros))
+		(printout t "Titulo: " (send ?curr-obj get-titulo) crlf)
+	)
 	(printout t crlf)
 
 )

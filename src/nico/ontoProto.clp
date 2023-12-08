@@ -70,7 +70,7 @@
         (create-accessor read-write))
     (slot lugar
         (type INTEGER)
-        create-accessor read-write))
+        (create-accessor read-write))
 )
 
 (defclass NovelaFiccion
@@ -572,7 +572,7 @@
         (nombre  "Beulah Khan")
     )
 
-        ([libro0] of NovelaFiccion
+     ([libro0] of NovelaFiccion
         (tieneCaracteristica  [autor88] [Juvenil_femenina] [Accion] [CienciaFiccion] [Intermedia] [Militar] [Pirata] )
         (titulo  "Zombie Predator")
     )
