@@ -1,0 +1,4 @@
+Este es el prototipo de nuestro trabajo de IA. Tenemos un generador de libros aleatorios que es el .cc y las intancias y las reglas en los clp
+
+Tambien tenemos un ejecutable de bash para los usuarios de linux. Con usar ./run.sh se iniciara el programa de clips.
+A mas, tenemos un ejerutable que, por ahora, solo ejecuta un Juego de pruebas. Con el comando ./Juego1.sh se ejecutara.
