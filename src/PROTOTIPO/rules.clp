@@ -210,6 +210,14 @@
 	(retract ?f)
 )
 
+(defrule PREGUNTAS::askValoracion
+	(newLector)
+	?pref <- (preferencias)
+	=>
+	(bind ?valo (ask-int "Que valoracion minima es para ti lo minimo que quieres leer? [1-5]" ))
+	(modify ?pref (valoracion ?valo))
+)
+
 (defrule PREGUNTAS::askGenero
     (newLector)
 	?pref <- (preferencias)
