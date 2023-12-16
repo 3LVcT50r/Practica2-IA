@@ -341,6 +341,7 @@
 	(bind ?sexoe (send ?x get-sexo))
 	(if (< ?edada 8) then (modify ?pref (demografia [Infantil]))
 	)
+	(printout t "%s" instance-nombre [Infantil])
 	(focus INFERENCIA)
 )
 
