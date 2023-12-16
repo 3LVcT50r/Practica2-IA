@@ -129,7 +129,7 @@
 	(multislot popularidad (type INSTANCE)) ;La popularidad es una instancia
 	(slot valoracion (type INTEGER))
 	(multislot autoresfav (type INSTANCE))
-	(slot demografia (type INSTANCE))
+	(slot demografia (type STRING))
 )
 
 (deftemplate MAIN::prefvar
@@ -339,9 +339,13 @@
 	=>
 	(bind ?edada (send ?x get-edad))
 	(bind ?sexoe (send ?x get-sexo))
-	(if (< ?edada 8) then (modify ?pref (demografia [Infantill]))
+	(if (< ?edada 8) then (modify ?pref (demografia "Infantil"))
+	else (if (< ?edad 18) then
+		(if (eq ?sexoe 1) then (modify ?pref (demografia "Juvenil_femenina"))
+			else (modify ?pref (demografia "Juvenil_masculina")))
+		else (if (eq ?sexoe 1) then (modify ?pref (demografia "Adulta_femenina"))
+				else (modify ?pref (demografia "Adulta_masculina"))))
 	)
-	(printout t "%s" instance-nombre [Infantil])
 	(focus INFERENCIA)
 )
 
