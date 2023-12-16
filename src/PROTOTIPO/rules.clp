@@ -145,11 +145,53 @@
     (send ?x put-sexo ?sexo)
 )
 
+;;ESTO NO VA A COMPILAR HASTA QUE SE LE AGREGUE UNA FRECUENCIA AL LECTOR
+(defrule PREGUNTAS::askFrecuencia
+	(newLector)
+    ?x <- (object(is-a Lector))
+	=>
+	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2) "))
+    (send ?x put-freq ?freq)
+)
+
+;;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAnO
+(defrule PREGUNTAS::askLugar
+	(newLector)
+    ?x <- (object(is-a Lector))
+	=>
+	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
+	(if (eq ?lugar TRUE)
+	then (send ?x put-lugar 1)
+	else (send ?x put-lugar 0))
+)
+
+
+(defrule PREGUNTAS::askTiempo
+	(newLector)
+    ?x <- (object(is-a Lector))
+	=>
+	(bind ?tiempo (pregunta-si-no "Dispones de mucho tiempo para leer?"))
+	(if (eq ?tiempo TRUE)
+	then (send ?x put-tiempo 1)
+	else (send ?x put-tiempo 0))
+)
+
 
 (deffacts PREGUNTAS::hechos-iniciales "Establece hechos para poder recopilar informacion"
+	(popularidad ask)
 	(tema ask)
 	(genero ask)
 	(preferencias)
+)
+
+(defrule PREGUNTAS::askPopularidad
+	(newLector)
+	?pref <- (preferencias)
+	=>
+	(bind ?e (pregunta-si-no "Te gustan los libros populares? "))
+	(if (eq ?e TRUE) then
+		modify ?pref (popularidad 1))
+		else modify ?pref (popularidad 0)
 )
 
 (defrule PREGUNTAS::askGenero
@@ -206,28 +248,6 @@
 	(retract ?f)
 	(focus INFERENCIA)
 )
-
-;;ESTO NO VA A COMPILAR HASTA QUE SE LE AGREGUE UNA FRECUENCIA AL LECTOR
-(defrule PREGUNTAS::askFrecuencia
-	(newLector)
-    ?x <- (object(is-a Lector))
-	=>
-	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2)"))
-    (send ?x put-freq ?freq)
-)
-
-;;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAnO
-(defrule PREGUNTAS::askLugar
-	(newLector)
-    ?x <- (object(is-a Lector))
-	=>
-	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
-	(if (eq ?lugar TRUE)
-	then (send ?x put-lugar 1)
-	else (send ?x put-lugar 0))
-)
-
-
 
 ; *******************************************************
 ;               	ABSTRACCION                 
