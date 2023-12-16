@@ -93,6 +93,10 @@
         (type INTEGER)
         (create-accessor read-write)
     )
+    (slot tamano
+        (type INTEGER)
+        (create-accessor read-write)
+    )
 )
 
 (definstances instances
@@ -2728,10 +2732,6 @@
 
     ([Conocido] of Popularidad
         (nombre  "Conocido") 
-    )
-
-    ([Nada_popular] of Popularidad
-        (nombre  "Nada popular") 
     )
 
     ([BestSeller] of Popularidad

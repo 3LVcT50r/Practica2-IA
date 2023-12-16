@@ -215,14 +215,13 @@
 	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2)"))
     (send ?x put-freq ?freq)
 )
-;
+
 ;;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAnO
 (defrule PREGUNTAS::askLugar
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
 	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
-    ;(send ?x put-lugar ?lugar)
 	(if (eq ?lugar TRUE)
 	then (send ?x put-lugar 1)
 	else (send ?x put-lugar 0))
