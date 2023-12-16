@@ -89,6 +89,10 @@
     (slot titulo
         (type STRING)
         (create-accessor read-write))
+    (slot valoracion
+        (type INTEGER)
+        (create-accessor read-write)
+    )
 )
 
 (definstances instances
