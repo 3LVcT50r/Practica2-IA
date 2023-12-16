@@ -81,9 +81,9 @@
 #    Classes
 #################################################################
 
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Popularidad
-:Popularidad rdf:type owl:Class ;
-             rdfs:subClassOf :Caracteristica .
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Tamano
+:Tamano rdf:type owl:Class ;
+        rdfs:subClassOf :Caracteristica .
 
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Autor
@@ -118,6 +118,11 @@
 :NovelaFiccion rdf:type owl:Class .
 
 
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Popularidad
+:Popularidad rdf:type owl:Class ;
+             rdfs:subClassOf :Caracteristica .
+
+
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Tema
 :Tema rdf:type owl:Class ;
       rdfs:subClassOf :Caracteristica .
@@ -127,22 +132,19 @@
 #    Individuals
 #################################################################
 
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#BestSeller
-:BestSeller rdf:type owl:NamedIndividual ,
-                     :Popularidad ;
-            :nombre "BestSeller" .
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Grande
+:Grande rdf:type owl:NamedIndividual ,
+                 :Tamano .
 
 
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Conocido
-:Conocido rdf:type owl:NamedIndividual ,
-                   :Popularidad ;
-          :nombre "Conocido" .
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Mediano
+:Mediano rdf:type owl:NamedIndividual ,
+                  :Tamano .
 
 
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Nada_popular
-:Nada_popular rdf:type owl:NamedIndividual ,
-                       :Popularidad ;
-              :nombre "Nada popular" .
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Pequeno
+:Pequeno rdf:type owl:NamedIndividual ,
+                  :Tamano .
 
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Accion
@@ -169,6 +171,12 @@
           :nombre "Aventura" .
 
 
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/BestSeller
+:BestSeller rdf:type owl:NamedIndividual ,
+                     :Popularidad ;
+            :nombre "BestSeller" .
+
+
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/CienciaFiccion
 :CienciaFiccion rdf:type owl:NamedIndividual ,
                          :Genero ;
@@ -179,6 +187,12 @@
 :Comedia rdf:type owl:NamedIndividual ,
                   :Genero ;
          :nombre "Comedia" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Conocido
+:Conocido rdf:type owl:NamedIndividual ,
+                   :Popularidad ;
+          :nombre "Conocido" .
 
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Crimen_organizado
@@ -263,6 +277,12 @@
 :Mitologia rdf:type owl:NamedIndividual ,
                     :Tema ;
            :nombre "Mitologia" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Nada_popular
+:Nada_popular rdf:type owl:NamedIndividual ,
+                       :Popularidad ;
+              :nombre "Nada popular" .
 
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Oeste

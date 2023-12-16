@@ -55,6 +55,12 @@
     (pattern-match reactive)
 )
 
+(defclass Tamano
+    (is-a Caracteristica)
+    (role concrete)
+    (pattern-match reactive)
+)
+
 (defclass Lector
     (is-a USER)
     (role concrete)
@@ -93,10 +99,6 @@
         (type STRING)
         (create-accessor read-write))
     (slot valoracion
-        (type INTEGER)
-        (create-accessor read-write)
-    )
-    (slot tamano
         (type INTEGER)
         (create-accessor read-write)
     )

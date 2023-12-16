@@ -129,7 +129,15 @@
 	(multislot popularidad (type INSTANCE)) ;La popularidad es una instancia
 	(slot valoracion (type INTEGER))
 	(multislot autoresfav (type INSTANCE))
+	;(slot demografia (type STRING))
+	;(slot dificultad (type STRING))
+)
+
+(deftemplate MAIN:abstracciones		;
 	(slot demografia (type STRING))
+	(slot dificultad (type STRING))
+	(slot portabilidad (type STRING))
+	(slot popularidad (type STRING))
 )
 
 (deftemplate MAIN::prefvar
@@ -348,6 +356,16 @@
 	)
 	(focus INFERENCIA)
 )
+
+(defrule decideDificultat
+	(newLector)
+	?x <- (object(is-a Lector))
+	?pref <- (preferencias)
+	=>
+
+)
+
+(defrule decidePortabilidad)
 
 
 ;;;;; FILTRADO UNA 
