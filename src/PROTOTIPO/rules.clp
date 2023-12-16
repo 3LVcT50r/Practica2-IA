@@ -78,6 +78,17 @@
     ?lista
 )
 
+;;; Funcion para hacer una pregunta con respuesta numerica unica
+(deffunction pregunta-numerica (?pregunta ?rangini ?rangfi)
+	(format t "%s [%d, %d] " ?pregunta ?rangini ?rangfi)
+	(bind ?respuesta (read))
+	(while (not(and(>= ?respuesta ?rangini)(<= ?respuesta ?rangfi))) do
+		(format t "%s [%d, %d] " ?pregunta ?rangini ?rangfi)
+		(bind ?respuesta (read))
+	)
+	?respuesta
+)
+
 
 ;;INICIO DEL PROGRAMA
 
@@ -93,7 +104,7 @@
 	(multislot autores (type INSTANCE))
 	(multislot generos (type INSTANCE))
 	(slot tamano (type INTEGER))
-	(slot popularidad (type INSTANCE)) ;La popularidad es una instancia
+	(multislot popularidad (type INSTANCE)) ;La popularidad es una instancia
 	(slot valoracion (type INTEGER))
 )
 
@@ -118,6 +129,13 @@
 ;               	PREGUNTAS               
 ; *******************************************************
 (defmodule PREGUNTAS (export ?ALL) (import MAIN ?ALL))
+
+(deffacts PREGUNTAS::hechos-iniciales "Establece hechos para poder recopilar informacion"
+	(popularidad ask)
+	(tema ask)
+	(genero ask)
+	(preferencias)
+)
 
 
 (defrule PREGUNTAS::askNombre
@@ -165,33 +183,31 @@
 	else (send ?x put-lugar 0))
 )
 
-
-(defrule PREGUNTAS::askTiempo
-	(newLector)
-    ?x <- (object(is-a Lector))
-	=>
-	(bind ?tiempo (pregunta-si-no "Dispones de mucho tiempo para leer?"))
-	(if (eq ?tiempo TRUE)
-	then (send ?x put-tiempo 1)
-	else (send ?x put-tiempo 0))
-)
-
-
-(deffacts PREGUNTAS::hechos-iniciales "Establece hechos para poder recopilar informacion"
-	(popularidad ask)
-	(tema ask)
-	(genero ask)
-	(preferencias)
-)
-
 (defrule PREGUNTAS::askPopularidad
-	(newLector)
+    (newLector)
 	?pref <- (preferencias)
+	?f <- (popularidad ask)
 	=>
-	(bind ?e (pregunta-si-no "Te gustan los libros populares? "))
-	(if (eq ?e TRUE) then
-		modify ?pref (popularidad 1))
-		else modify ?pref (popularidad 0)
+;	(bind ?e (pregunta-si-no "Esta interesado en algun(os) genero(os) en concreto?"))
+;	(if (eq ?e TRUE)
+	(bind $?obj-popularidad (find-all-instances ((?inst Popularidad)) TRUE))
+	(bind $?nom-popularidad (create$ ))
+	(loop-for-count (?i 1 (length$ $?obj-popularidad)) do
+		(bind ?curr-obj (nth$ ?i ?obj-popularidad))
+		(bind ?curr-nom (send ?curr-obj get-nombre))
+		(bind $?nom-popularidad(insert$ $?nom-popularidad (+ (length$ $?nom-popularidad) 1) ?curr-nom))
+	)
+	(bind ?escogido (pregunta-multi "Escoja que tan populares quiere que sean los libros: " $?nom-popularidad))
+
+	(bind $?respuesta (create$ ))
+	(loop-for-count (?i 1 (length$ ?escogido)) do
+		(bind ?curr-index (nth$ ?i ?escogido))
+		(bind ?curr-atr (nth$ ?curr-index ?obj-popularidad))
+		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
+	)
+	(modify ?pref (popularidad $?respuesta))
+	
+	(retract ?f)
 )
 
 (defrule PREGUNTAS::askGenero
