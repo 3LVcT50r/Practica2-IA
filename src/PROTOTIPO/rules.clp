@@ -78,6 +78,28 @@
     ?lista
 )
 
+(deffunction pregunta-multi-autores (?pregunta $?valores-posibles)
+    (bind ?linea (format nil "%s" ?pregunta))
+    (printout t ?linea crlf)
+    (progn$ (?var ?valores-posibles)
+            (bind ?linea (format nil "  %d. %s" ?var-index ?var))
+            (printout t ?linea crlf)
+    )
+    (format t "%s" "Indica los numeros separados por un espacio: ")
+    (bind ?resp (readline))
+    (bind ?numeros (str-explode ?resp))
+    (bind $?lista (create$ ))
+    (progn$ (?var ?numeros)
+        (if (and (integerp ?var) (and (>= ?var 1) (<= ?var (length$ ?valores-posibles))))
+            then
+                (if (not (member$ ?var ?lista))
+                    then (bind ?lista (insert$ ?lista (+ (length$ ?lista) 1) ?var))
+                )
+        )
+    )
+    ?lista
+)
+
 ;;; Funcion para hacer una pregunta con respuesta numerica unica
 (deffunction pregunta-numerica (?pregunta ?rangini ?rangfi)
 	(format t "%s [%d, %d] " ?pregunta ?rangini ?rangfi)
@@ -106,6 +128,8 @@
 	(slot tamano (type INTEGER))
 	(multislot popularidad (type INSTANCE)) ;La popularidad es una instancia
 	(slot valoracion (type INTEGER))
+	(multislot autoresfav (type INSTANCE))
+	(slot demografia (type INSTANCE))
 )
 
 (deftemplate MAIN::prefvar
@@ -221,6 +245,33 @@
 	(retract ?f)
 )
 
+(defrule PREGUNTAS::askAutores
+    (newLector)
+	?pref <- (preferencias)
+	?f <- (genero ask)
+	=>
+	(bind ?e (pregunta-si-no "Te gusta algun(os) autor(es) en concreto?"))
+	(if (eq ?e TRUE)
+	then (bind $?obj-autores (find-all-instances ((?inst Autor)) TRUE))
+	(bind $?nom-autores (create$ ))
+	(loop-for-count (?i 1 (length$ $?obj-autores)) do
+		(bind ?curr-obj (nth$ ?i ?obj-autores))
+		(bind ?curr-nom (send ?curr-obj get-nombre))
+		(bind $?nom-autores(insert$ $?nom-autores (+ (length$ $?nom-autores) 1) ?curr-nom))
+	)
+	(bind ?escogido (pregunta-multi-autores "Escoja los generos en los que esta interesado: " $?nom-autores))
+
+	(bind $?respuesta (create$ ))
+	(loop-for-count (?i 1 (length$ ?escogido)) do
+		(bind ?curr-index (nth$ ?i ?escogido))
+		(bind ?curr-atr (nth$ ?curr-index ?obj-autores))
+		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
+	)
+	(modify ?pref (autoresfav $?respuesta))
+	)
+	(retract ?f)
+)
+
 (defrule PREGUNTAS::askGenero
     (newLector)
 	?pref <- (preferencias)
@@ -273,7 +324,7 @@
 	(modify ?pref (temas $?respuesta))
 	)
 	(retract ?f)
-	(focus INFERENCIA)
+	(focus ABSTRACCION)
 )
 
 ; *******************************************************
@@ -281,6 +332,18 @@
 ; *******************************************************
 (defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
 
+(defrule decideDemografia
+	(newLector)
+	?x <- (object(is-a Lector))
+	?pref <- (preferencias)
+	=>
+	(bind ?edada (send ?x get-edad))
+	(bind ?sexoe (send ?x get-sexo))
+	(if (eq sexoe 1) then
+		if (< ?edada 10) then (send ?pref put-demografia [Infantil_femenina])
+		)
+	(focus INFERENCIA)
+)
 
 
 ;;;;; FILTRADO UNA 
