@@ -42,6 +42,19 @@
 		else FALSE)
 )
 
+;Funcio que implenta la pregunta de tipus hombre o mujer (booleana) MUJER -> TRUE
+(deffunction pregunta-m-h (?question)
+	(format t "%s [m/h] " ?question)
+	(bind ?response (read))
+	(while (not(or(eq ?response m)(eq ?response h))) do
+		(printout t ?question)
+		(bind ?response (read))
+	)
+	(if (eq ?response m)
+		then TRUE
+		else FALSE)
+)
+
 ;;; Funcion para hacer una pregunta multi-respuesta con indices
 (deffunction pregunta-multi (?pregunta $?valores-posibles)
     (bind ?linea (format nil "%s" ?pregunta))
@@ -79,6 +92,9 @@
 	(multislot temas (type INSTANCE))
 	(multislot autores (type INSTANCE))
 	(multislot generos (type INSTANCE))
+	(slot tamano (type INTEGER))
+	(slot popularidad (type INSTANCE)) ;La popularidad es una instancia
+	(slot valoracion (type INTEGER))
 )
 
 (deftemplate MAIN::prefvar
@@ -125,7 +141,7 @@
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
-	(bind ?sexo (ask-int "Sexo: Mujer(M) o Hombre(H) "))
+	(bind ?sexo (pregunta-m-h "Sexo: Mujer o Hombre "))
     (send ?x put-sexo ?sexo)
 )
 
@@ -192,25 +208,25 @@
 )
 
 ;;ESTO NO VA A COMPILAR HASTA QUE SE LE AGREGUE UNA FRECUENCIA AL LECTOR
-;(defrule PREGUNTAS::askFrecuencia
-;	(newLector)
-;    ?x <- (object(is-a Lector))
-;	=>
-;	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2)"))
-;    (send ?x put-freq ?freq)
-;)
+(defrule PREGUNTAS::askFrecuencia
+	(newLector)
+    ?x <- (object(is-a Lector))
+	=>
+	(bind ?freq (ask-int "Es aficionado a la lectura? Si(0), De vez en cuando leo(1), No(2)"))
+    (send ?x put-freq ?freq)
+)
 ;
-;;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAÑO
-;(defrule PREGUNTAS::askLugar
-;	(newLector)
-;    ?x <- (object(is-a Lector))
-;	=>
-;	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
-;    ;(send ?x put-lugar ?lugar)
-;	(if (eq ?lugar TRUE)
-;	then (send ?x put-lugar 1)
-;	else (send ?x put-lugar 0))
-;)
+;;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAnO
+(defrule PREGUNTAS::askLugar
+	(newLector)
+    ?x <- (object(is-a Lector))
+	=>
+	(bind ?lugar (pregunta-si-no "Sueles llevarte los libros a diferentes lugares?"))
+    ;(send ?x put-lugar ?lugar)
+	(if (eq ?lugar TRUE)
+	then (send ?x put-lugar 1)
+	else (send ?x put-lugar 0))
+)
 
 
 
@@ -219,6 +235,8 @@
 ; *******************************************************
 ;(defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
 
+
+;;;;; FILTRADO UNA 
 ; *******************************************************
 ;               	INFERENCIA                  
 ; *******************************************************

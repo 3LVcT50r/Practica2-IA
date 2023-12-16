@@ -49,6 +49,12 @@
     (pattern-match reactive)
 )
 
+(defclass Popularidad
+    (is-a Caracteristica)
+    (role concrete)
+    (pattern-match reactive)
+)
+
 (defclass Lector
     (is-a USER)
     (role concrete)
@@ -2712,4 +2718,19 @@
          (nombre  "Vikingos")
     )
 
+    ([Nada_popular] of Popularidad
+        (nombre  "Nada popular") 
+    )
+
+    ([Conocido] of Popularidad
+        (nombre  "Conocido") 
+    )
+
+    ([Nada_popular] of Popularidad
+        (nombre  "Nada popular") 
+    )
+
+    ([BestSeller] of Popularidad
+        (nombre  "BestSeller") 
+    )
 )
