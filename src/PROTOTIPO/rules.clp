@@ -166,6 +166,7 @@
 	(popularidad ask)
 	(tema ask)
 	(genero ask)
+	(autores ask)
 	(valoracion ask)
 	(preferencias)
 )
@@ -248,7 +249,7 @@
 	?pref <- (preferencias)
 	?f <- (valoracion ask)
 	=>
-	(bind ?valo (ask-int "Que valoracion minima es para ti lo minimo que quieres leer? [1-5]" ))
+	(bind ?valo (ask-int "Que valoracion minima es para ti lo minimo que quieres leer? [1-5]: " ))
 	(modify ?pref (valoracion ?valo))
 	(retract ?f)
 )
@@ -256,7 +257,7 @@
 (defrule PREGUNTAS::askAutores
     (newLector)
 	?pref <- (preferencias)
-	?f <- (genero ask)
+	?f <- (autores ask)
 	=>
 	(bind ?e (pregunta-si-no "Te gusta algun(os) autor(es) en concreto?"))
 	(if (eq ?e TRUE)
@@ -267,7 +268,7 @@
 		(bind ?curr-nom (send ?curr-obj get-nombre))
 		(bind $?nom-autores(insert$ $?nom-autores (+ (length$ $?nom-autores) 1) ?curr-nom))
 	)
-	(bind ?escogido (pregunta-multi-autores "Escoja los generos en los que esta interesado: " $?nom-autores))
+	(bind ?escogido (pregunta-multi-autores "Escoja los autores en los que esta interesado: " $?nom-autores))
 
 	(bind $?respuesta (create$ ))
 	(loop-for-count (?i 1 (length$ ?escogido)) do
@@ -340,32 +341,35 @@
 ; *******************************************************
 (defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
 
+;(deffacts ABSTRACCION::hechos-iniciales "Establece hechos para poder recopilar informacion"
+;	(abstracciones)
+;)
+
 (defrule decideDemografia
 	(newLector)
 	?x <- (object(is-a Lector))
-	?pref <- (preferencias)
+	?abss <- (abstracciones)
 	=>
 	(bind ?edada (send ?x get-edad))
 	(bind ?sexoe (send ?x get-sexo))
-	(if (< ?edada 8) then (modify ?pref (demografia "Infantil"))
-	else (if (< ?edad 18) then
-		(if (eq ?sexoe 1) then (modify ?pref (demografia "Juvenil_femenina"))
-			else (modify ?pref (demografia "Juvenil_masculina")))
-		else (if (eq ?sexoe 1) then (modify ?pref (demografia "Adulta_femenina"))
-				else (modify ?pref (demografia "Adulta_masculina"))))
+	(if (< ?edada 8) then (modify ?abss (demografia "Infantil"))
+	else (if (< ?edada 18) then
+		(if (eq ?sexoe 1) then (modify ?abss (demografia "Juvenil_femenina"))
+			else (modify ?abss (demografia "Juvenil_masculina")))
+		else (if (eq ?sexoe 1) then (modify ?abss (demografia "Adulta_femenina"))
+				else (modify ?abss (demografia "Adulta_masculina"))))
 	)
 	(focus INFERENCIA)
 )
 
-(defrule decideDificultat
-	(newLector)
-	?x <- (object(is-a Lector))
-	?pref <- (preferencias)
-	=>
+;(defrule decideDificultat
+;	(newLector)
+;	?x <- (object(is-a Lector))
+;	?abss <- (abstracciones)
+;	=>	(bind)
+;)
 
-)
-
-(defrule decidePortabilidad)
+;(defrule decidePortabilidad)
 
 
 ;;;;; FILTRADO UNA 
