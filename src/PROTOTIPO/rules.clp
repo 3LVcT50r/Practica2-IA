@@ -134,6 +134,7 @@
 	(popularidad ask)
 	(tema ask)
 	(genero ask)
+	(valoracion ask)
 	(preferencias)
 )
 
@@ -213,9 +214,11 @@
 (defrule PREGUNTAS::askValoracion
 	(newLector)
 	?pref <- (preferencias)
+	?f <- (valoracion ask)
 	=>
 	(bind ?valo (ask-int "Que valoracion minima es para ti lo minimo que quieres leer? [1-5]" ))
 	(modify ?pref (valoracion ?valo))
+	(retract ?f)
 )
 
 (defrule PREGUNTAS::askGenero
@@ -276,7 +279,8 @@
 ; *******************************************************
 ;               	ABSTRACCION                 
 ; *******************************************************
-;(defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
+(defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
+
 
 
 ;;;;; FILTRADO UNA 
