@@ -339,9 +339,8 @@
 	=>
 	(bind ?edada (send ?x get-edad))
 	(bind ?sexoe (send ?x get-sexo))
-	(if (eq sexoe 1) then
-		if (< ?edada 10) then (send ?pref put-demografia [Infantil_femenina])
-		)
+	(if (< ?edada 8) then (modify ?pref (demografia Infantil))
+	)
 	(focus INFERENCIA)
 )
 
