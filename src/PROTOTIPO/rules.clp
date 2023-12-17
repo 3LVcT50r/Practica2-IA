@@ -128,7 +128,6 @@
 	(slot tamano (type INTEGER))
 	(multislot popularidad (type INSTANCE)) ;La popularidad es una instancia
 	(slot valoracion (type INTEGER))
-	(multislot autoresfav (type INSTANCE))
 	;(slot demografia (type STRING))
 	;(slot dificultad (type STRING))
 )
@@ -137,7 +136,6 @@
 	(slot demografia (type STRING))
 	(slot dificultad (type STRING))
 	(slot portabilidad (type STRING))
-	;(slot popularidad (type STRING))
 )
 
 (deftemplate MAIN::prefvar
@@ -276,8 +274,7 @@
 		(bind ?curr-atr (nth$ ?curr-index ?obj-autores))
 		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
 	)
-	(modify ?pref (autoresfav $?respuesta))
-	)
+	(modify ?pref (autores $?respuesta)))
 	(retract ?f)
 )
 
@@ -303,8 +300,7 @@
 		(bind ?curr-atr (nth$ ?curr-index ?obj-generos))
 		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
 	)
-	(modify ?pref (generos $?respuesta))
-	)
+	(modify ?pref (generos $?respuesta)))
 	(retract ?f)
 )
 
@@ -442,7 +438,6 @@
 	(retract ?f)
 )
 
-
 (deffunction puntuacion (?carInst $?pref)
   (bind ?puntuacion 0)
   (loop-for-count (?i 1 (length$ $?pref)) do
@@ -452,6 +447,7 @@
 			(bind ?class (str-cat(class ?curr-atr)))
 			(if (eq ?class "Genero") then (bind ?puntuacion (+ ?puntuacion 1000)))
 			(if (eq ?class "Tema") then (bind ?puntuacion (+ ?puntuacion 2000)))
+			(if (eq ?class "Autor") then (bind ?puntuacion (+ ?puntuacion 500)))
 		)
     )
   )
@@ -473,7 +469,6 @@
 		(bind ?curr-obj (nth$ ?i ?obj-libros))
 		(bind $?carInst (send ?curr-obj get-tieneCaracteristica))
 		(bind ?punt (puntuacion $?carInst $?pref))
-		(printout t ?punt crlf)
 		(if (> ?punt 0) then
 			(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-obj))
 			(send ?curr-obj put-puntuacion ?punt)
@@ -495,6 +490,42 @@
 ; *******************************************************
 (defmodule RESPUESTA (import MAIN ?ALL) (import PREGUNTAS ?ALL)(import INFERENCIA ?ALL)(export ?ALL))
 
+
+(deffunction printInst (?carInst ?type)
+  (loop-for-count (?i 1 (length$ $?carInst)) do
+    (bind ?curr-atr (nth$ ?i $?carInst))
+	(bind ?class (str-cat(class ?curr-atr)))
+	(if (eq ?class ?type) then 
+		(printout t " " (send ?curr-atr get-nombre))
+	)
+  )
+  (printout t crlf)
+)
+
+(deffunction printRazones (?book ?carInst)
+	(printout t crlf)
+	(bind ?punt (send ?book get-puntuacion))
+	(printout t "Este libro tiene una puntacion de recomendacion del: " ?punt  crlf)
+	(if (< ?punt 4000) then 
+		
+	)
+	(printout t crlf)
+)
+
+(deffunction printBook (?book)
+	(bind $?carInst (send ?book get-tieneCaracteristica))
+	(printout t "-------------------------------------------------------------------------------" crlf crlf)
+	(printout t "Titulo: " (send ?book get-titulo) crlf)
+	(printout t "Autor:") (printInst ?carInst "Autor")
+	(printout t "Generos:") (printInst ?carInst "Genero")
+	(printout t "Temas:") (printInst ?carInst "Tema")
+	(printout t "Demografia:") (printInst ?carInst "Demografia")
+	(printout t "Dificultad:") (printInst ?carInst "Dificultad")
+	(printRazones ?book ?carInst)
+	(printout t "-------------------------------------------------------------------------------" crlf)
+)
+
+
 (defrule RESPUESTA::printRecomendacion
 	?u <- (recomendaciones (libros $?libros))
 	(newLector)
@@ -503,8 +534,8 @@
 	(printout t "A partir de tus gustos y caracteriseticas te recomendamos: " crlf)
 	(loop-for-count (?i 1 3) do
 		(bind ?curr-obj (nth$ ?i $?libros))
-		(printout t "Titulo: " (send ?curr-obj get-titulo) crlf)
+		(printBook ?curr-obj)
 	)
-	(printout t crlf)
+	(printout t "" crlf)
 
 )
