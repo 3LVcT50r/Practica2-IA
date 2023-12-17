@@ -345,7 +345,7 @@
 	(abstracciones)
 	(demo abas)
 	(diff abas)
-	;()
+	(port abas)
 )
 
 (defrule decideDemografia
@@ -389,13 +389,24 @@
 	))
 
 	(retract ?f)
+	;(focus INFERENCIA)
+)
+
+(defrule decidePortabilidad
+	(newLector)
+	?x <- (object(is-a Lector))
+	?abss <- (abstracciones)
+	?f <- (port abas)
+	=>
+	(bind ?lug (send ?x get-lugar))
+	(if (eq lug 1) then (modify ?abss (portabilidad "Alta"))
+	else (modify ?abss (portabilidad "Baja"))
+	)
+
+	(retract ?f)
 	(focus INFERENCIA)
 )
 
-;(defrule decidePortabilidad)
-
-
-;;;;; FILTRADO UNA 
 ; *******************************************************
 ;               	INFERENCIA                  
 ; *******************************************************

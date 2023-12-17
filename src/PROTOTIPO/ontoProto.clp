@@ -2743,4 +2743,11 @@
     ([BestSeller] of Popularidad
         (nombre  "BestSeller") 
     )
+
+    ([Grande] of Tamano
+        (nombre "Grande")
+    )
+    ([Pequeno] of Tamano
+        (nombre "Pequeno")
+    )
 )
