@@ -83,9 +83,6 @@
     (slot lugar
         (type INTEGER)
         (create-accessor read-write))
-    (slot tiempo
-        (type INTEGER)
-        (create-accessor read-write))
 )
 
 (defclass NovelaFiccion

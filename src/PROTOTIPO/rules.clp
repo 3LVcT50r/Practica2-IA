@@ -137,7 +137,7 @@
 	(slot demografia (type STRING))
 	(slot dificultad (type STRING))
 	(slot portabilidad (type STRING))
-	(slot popularidad (type STRING))
+	;(slot popularidad (type STRING))
 )
 
 (deftemplate MAIN::prefvar
@@ -344,6 +344,8 @@
 (deffacts ABSTRACCION::hechos-iniciales "Establece hechos para poder recopilar informacion"
 	(abstracciones)
 	(demo abas)
+	(diff abas)
+	;()
 )
 
 (defrule decideDemografia
@@ -362,15 +364,31 @@
 				else (modify ?abss (demografia "Adulta_masculina"))))
 	)
 	(retract ?f)
-	(focus INFERENCIA)
+	;(focus INFERENCIA)
 )
 
-;(defrule decideDificultat
-;	(newLector)
-;	?x <- (object(is-a Lector))
-;	?abss <- (abstracciones)
-;	=>	(bind)
-;)
+(defrule decideDificultat
+	(newLector)
+	?x <- (object(is-a Lector))
+	?abss <- (abstracciones)
+	?f <- (diff abas)
+	=>	
+	(bind ?freqe (send ?x get-freq))
+	(bind ?edada (send ?x get-edad))
+	(if (eq ?freqe 0) then
+		(if (< ?edada 8) then (modify ?abss (dificultad "Media"))
+		else (modify ?abss (dificultad "Alta")))
+	else (if (eq ?freqe 1) then
+		(if (< ?edada 8) then (modify ?abss (dificultad "Baja"))
+		else (if (< ?edad 18) then (modify ?abss (dificultad "Media"))
+		else (modify ?abss (dificultad "Alta"))))
+	else 
+		(if (< ?edada 18) then (modify ?abss (dificultad "Baja"))
+		else (modify ?abss (dificultad "Media")))
+	))
+	(retract ?f)
+	(focus INFERENCIA)
+)
 
 ;(defrule decidePortabilidad)
 
