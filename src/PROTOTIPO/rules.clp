@@ -375,17 +375,19 @@
 	=>	
 	(bind ?freqe (send ?x get-freq))
 	(bind ?edada (send ?x get-edad))
+
 	(if (eq ?freqe 0) then
 		(if (< ?edada 8) then (modify ?abss (dificultad "Media"))
 		else (modify ?abss (dificultad "Alta")))
 	else (if (eq ?freqe 1) then
 		(if (< ?edada 8) then (modify ?abss (dificultad "Baja"))
-		else (if (< ?edad 18) then (modify ?abss (dificultad "Media"))
+		else (if (< ?edada 18) then (modify ?abss (dificultad "Media"))
 		else (modify ?abss (dificultad "Alta"))))
 	else 
 		(if (< ?edada 18) then (modify ?abss (dificultad "Baja"))
 		else (modify ?abss (dificultad "Media")))
 	))
+
 	(retract ?f)
 	(focus INFERENCIA)
 )
