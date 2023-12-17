@@ -102,6 +102,10 @@
         (type INTEGER)
         (create-accessor read-write)
     )
+    (slot puntuacion
+        (type INTEGER)
+        (create-accessor read-write)
+    )
 )
 
 (definstances instances

@@ -133,7 +133,7 @@
 	;(slot dificultad (type STRING))
 )
 
-(deftemplate MAIN:abstracciones		;
+(deftemplate MAIN::abstracciones		;
 	(slot demografia (type STRING))
 	(slot dificultad (type STRING))
 	(slot portabilidad (type STRING))
@@ -341,14 +341,16 @@
 ; *******************************************************
 (defmodule ABSTRACCION (import MAIN ?ALL)(import PREGUNTAS ?ALL)(export ?ALL))
 
-;(deffacts ABSTRACCION::hechos-iniciales "Establece hechos para poder recopilar informacion"
-;	(abstracciones)
-;)
+(deffacts ABSTRACCION::hechos-iniciales "Establece hechos para poder recopilar informacion"
+	(abstracciones)
+	(demo abas)
+)
 
 (defrule decideDemografia
 	(newLector)
 	?x <- (object(is-a Lector))
 	?abss <- (abstracciones)
+	?f <- (demo abas)
 	=>
 	(bind ?edada (send ?x get-edad))
 	(bind ?sexoe (send ?x get-sexo))
@@ -359,6 +361,7 @@
 		else (if (eq ?sexoe 1) then (modify ?abss (demografia "Adulta_femenina"))
 				else (modify ?abss (demografia "Adulta_masculina"))))
 	)
+	(retract ?f)
 	(focus INFERENCIA)
 )
 
@@ -409,14 +412,23 @@
 )
 
 
-(deffunction existeUna (?carInst $?pref)
+(deffunction puntuacion (?carInst $?pref)
+  (bind ?puntuacion 0)
   (loop-for-count (?i 1 (length$ $?pref)) do
     (bind ?curr-atr (nth$ ?i $?pref))
-    (if (member$ ?curr-atr ?carInst)
-      then (return TRUE)
+    (if (member$ ?curr-atr ?carInst) then 
+		(if (member$ ?curr-atr ?carInst) then
+			(bind ?class (str-cat(class ?curr-atr)))
+			(if (eq ?class "Genero") then (bind ?puntuacion (+ ?puntuacion 1000)))
+			(if (eq ?class "Tema") then (bind ?puntuacion (+ ?puntuacion 2000)))
+		)
     )
   )
-  FALSE
+  (return ?puntuacion)
+)
+
+(deffunction sort_puntuacion (?c1 ?c2)
+	(< (send ?c1 get-puntuacion) (send ?c2 get-puntuacion))
 )
 
 (defrule libros-recomendados
@@ -429,15 +441,18 @@
 	(loop-for-count (?i 1 (length$ $?obj-libros)) do
 		(bind ?curr-obj (nth$ ?i ?obj-libros))
 		(bind $?carInst (send ?curr-obj get-tieneCaracteristica))
-		(if (existeUna $?carInst $?pref) then
+		(bind ?punt (puntuacion $?carInst $?pref))
+		(printout t ?punt crlf)
+		(if (> ?punt 0) then
 			(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-obj))
+			(send ?curr-obj put-puntuacion ?punt)
 		)
 	)
-	(modify ?recom (libros ?respuesta))
+	(bind $?respuesta (sort sort_puntuacion $?respuesta))
+    (modify ?recom (libros ?respuesta))
 	(retract ?f)
 	(focus RESPUESTA)
 )
-
 
 ; *******************************************************
 ;               	ASSIGNACIONES               
