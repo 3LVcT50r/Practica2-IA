@@ -44,6 +44,13 @@
 #    Data properties
 #################################################################
 
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#valoracion
+:valoracion rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf owl:topDataProperty ;
+            rdfs:domain :NovelaFiccion ;
+            rdfs:range xsd:int .
+
+
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/edad
 :edad rdf:type owl:DatatypeProperty ;
       rdfs:subPropertyOf owl:topDataProperty ;
@@ -80,11 +87,6 @@
 #################################################################
 #    Classes
 #################################################################
-
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Tamano
-:Tamano rdf:type owl:Class ;
-        rdfs:subClassOf :Caracteristica .
-
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Autor
 :Autor rdf:type owl:Class ;
@@ -123,6 +125,11 @@
              rdfs:subClassOf :Caracteristica .
 
 
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Tamano
+:Tamano rdf:type owl:Class ;
+        rdfs:subClassOf :Caracteristica .
+
+
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Tema
 :Tema rdf:type owl:Class ;
       rdfs:subClassOf :Caracteristica .
@@ -131,21 +138,6 @@
 #################################################################
 #    Individuals
 #################################################################
-
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Grande
-:Grande rdf:type owl:NamedIndividual ,
-                 :Tamano .
-
-
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Mediano
-:Mediano rdf:type owl:NamedIndividual ,
-                  :Tamano .
-
-
-###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo#Pequeno
-:Pequeno rdf:type owl:NamedIndividual ,
-                  :Tamano .
-
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Accion
 :Accion rdf:type owl:NamedIndividual ,
@@ -231,6 +223,11 @@
           :nombre "Fantasia" .
 
 
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Grande
+:Grande rdf:type owl:NamedIndividual ,
+                 :Tamano .
+
+
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Infantil
 :Infantil rdf:type owl:NamedIndividual ,
                    :Demografia ;
@@ -253,6 +250,11 @@
 :Juvenil_masculina rdf:type owl:NamedIndividual ,
                             :Demografia ;
                    :nombre "Juvenil_masculina" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Mediano
+:Mediano rdf:type owl:NamedIndividual ,
+                  :Tamano .
 
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Medieval
@@ -289,6 +291,11 @@
 :Oeste rdf:type owl:NamedIndividual ,
                 :Tema ;
        :nombre "Oeste" .
+
+
+###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Pequeno
+:Pequeno rdf:type owl:NamedIndividual ,
+                  :Tamano .
 
 
 ###  http://www.semanticweb.org/lolzd10/ontologies/2023/11/ontoPrototipo/Pirata
@@ -391,6 +398,7 @@
                              :Fantasia ,
                              :Viajes_en_el_tiempo ,
                              :autor0 ;
+        :valoracion 1 ;
         :titulo "Las desgracias del elfo adulto" .
 
 
