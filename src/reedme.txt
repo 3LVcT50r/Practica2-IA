@@ -1,0 +1,9 @@
+En este directorio encotraras el codigo utilizado para la Practica 2 de IA de la FIB (SBC).
+Los codigos del problema son: ontoProto.clp y rules.clp
+El codigo realizado para el conjunto de libros y autores es: random.cc
+
+Para ejecutar el programa de manera autonoma: ./run.sh
+
+Para ejecutar cualquier juego de pruebas: ./JuegoX.sh
+
+Si se ejecuta desde un SO de Windows, con abrir el test.bat en el programa de CLIPS se podra ver un juego de pruebas hecho para la debugacion de codigo.
