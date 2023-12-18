@@ -14,6 +14,8 @@ vector<string> generos = {"Accion","Aventura","CienciaFiccion","Comedia","Drama"
 vector<string> temas = {"Crimen_organizado","Espacial","Medieval","Militar","Mitologia","Oeste","Pirata","Policiaco","Psicologico","Samurai","Superheroes","Supervivencia","Urbano","Vampiros","Viajes_en_el_tiempo","Vikingos"};
 vector<string> dificultad = {"Facil","Dificil","Intermedia"};
 vector<string> demografia = {"Adulta_masculina", "Adulta_femenina", "Juvenil_masculina", "Juvenil_femenina", "Infantil"};
+vector<string> popularidad = {"Nada_popular", "Conocido", "BestSeller"};
+vector<string> tamano = {"Grande", "Pequeno"};
 map<int,vector<int>> autorBooks;
 
 /*
@@ -58,6 +60,9 @@ void newBook(int iBook) {
     int tem2 = rand() % temas.size();
     while (tem1 == tem2) tem2 = rand() % generos.size();
     int dif = rand() % dificultad.size();
+    int popu = rand() % popularidad.size();
+    int tam = rand() % tamano.size();
+    int val = rand() % 6;
 
     map<int,vector<int>>::iterator it;
     it = autorBooks.find(aut);
@@ -70,8 +75,12 @@ void newBook(int iBook) {
     cout << "    ([libro" << iBook << "] of NovelaFiccion" << endl;
     cout << "        (tieneCaracteristica  " << "[autor"<< aut << "] " << "[" << demografia[dem] << "] ";
     cout << "[" << generos[gen1] << "] " << "["<< generos[gen2] << "] " << "[" << dificultad[dif] << "] "; 
-    cout << "[" << temas[tem1] << "] " << "[" << temas[tem2] << "] " << ")"<< endl;
-    cout << "        (titulo  "<< '"' << titles[iBook] << '"' << ")" <<  endl << "    )" << endl <<  endl;
+    cout << "[" << temas[tem1] << "] " << "[" << temas[tem2] << "] " << "[" << popularidad[popu] << "] ";
+    cout << "[" << tamano[tam] << "] ";
+    cout << ")"<< endl;
+    cout << "        (titulo  "<< '"' << titles[iBook] << '"' << ")" <<  endl;
+    cout << "        (valoracion " << val << ")" << endl;
+    cout << "    )" << endl <<  endl;
 
 }
 

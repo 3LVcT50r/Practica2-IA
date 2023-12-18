@@ -2,15 +2,15 @@
 (load rules.clp)
 (reset)
 (run)
-Victor
-20
-h
-1
-s
-2
+Ramona
+5
+m
 1
 n
+3
+5
+n
 s
-3 5
+2
 s
-1 6
+11 

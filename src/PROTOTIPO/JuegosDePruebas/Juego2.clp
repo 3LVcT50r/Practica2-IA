@@ -2,15 +2,16 @@
 (load rules.clp)
 (reset)
 (run)
-Victor
-20
-h
-1
+Gertrudis
+62
+m
+0
 s
-2
-1
-n
+1 2 3
+3
 s
-3 5
+23 45 67 88 91
 s
-1 6
+5
+s
+2 13
