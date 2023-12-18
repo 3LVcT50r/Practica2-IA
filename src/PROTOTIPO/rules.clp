@@ -133,7 +133,7 @@
 )
 
 (deftemplate MAIN::abstracciones		;
-	(slot demografia (type STRING))
+	(slot demografia (type FLOAT))
 	(slot dificultad (type STRING))
 	(slot portabilidad (type STRING))
 )
@@ -220,8 +220,6 @@
 	?pref <- (preferencias)
 	?f <- (popularidad ask)
 	=>
-;	(bind ?e (pregunta-si-no "Esta interesado en algun(os) genero(os) en concreto?"))
-;	(if (eq ?e TRUE)
 	(bind $?obj-popularidad (find-all-instances ((?inst Popularidad)) TRUE))
 	(bind $?nom-popularidad (create$ ))
 	(loop-for-count (?i 1 (length$ $?obj-popularidad)) do
@@ -352,12 +350,12 @@
 	=>
 	(bind ?edada (send ?x get-edad))
 	(bind ?sexoe (send ?x get-sexo))
-	(if (< ?edada 8) then (modify ?abss (demografia "Infantil"))
+	(if (< ?edada 8) then (modify ?abss (demografia 0.0))
 	else (if (< ?edada 18) then
-		(if (eq ?sexoe 1) then (modify ?abss (demografia "Juvenil_femenina"))
-			else (modify ?abss (demografia "Juvenil_masculina")))
-		else (if (eq ?sexoe 1) then (modify ?abss (demografia "Adulta_femenina"))
-				else (modify ?abss (demografia "Adulta_masculina"))))
+		(if (eq ?sexoe 1) then (modify ?abss (demografia 1.0))
+			else (modify ?abss (demografia 1.5)))
+		else (if (eq ?sexoe 1) then (modify ?abss (demografia 2.0))
+				else (modify ?abss (demografia 2.5))))
 	)
 	(retract ?f)
 	;(focus INFERENCIA)
@@ -412,10 +410,136 @@
 	(prefvar)
 	(recomendaciones)
 	(do conjunto)
+	(do abastracta)
 	(do recomendados)
 )
 
-(defrule conjutno-preferencias
+(deffunction puntuacionAbstracta (?demo ?dif ?port ?carInst) "Asignamos las puntaciones para generar una solucion abstracta"
+  (bind ?puntuacion 0)
+  (bind $?razones (create$ ))
+  (bind ?demoLibro )
+
+  (loop-for-count (?i 1 (length$ $?carInst)) do
+  (bind ?curr-atr (nth$ ?i $?carInst))
+	(bind ?class (str-cat(class ?curr-atr)))
+	(if (eq ?class "Demografia") then 
+		(bind ?demoLibro (send ?curr-atr get-nombre))
+		(if (eq ?demoLibro "Infantil") then (bind ?demoNum 0))
+		(if (eq ?demoLibro "Juvenil_femenina") then (bind ?demoNum 1))
+		(if (eq ?demoLibro "Juvenil_masculina") then (bind ?demoNum 1.5))
+		(if (eq ?demoLibro "Adulta_femenina") then (bind ?demoNum 2))
+		(if (eq ?demoLibro "Adulta_masculina") then (bind ?demoNum 2.5))
+		
+		(if (eq (round ?demoNum) (round ?demo) ) then
+			(bind ?puntuacion (+ ?puntuacion 1500))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta dirigido para un publico de tu edad " ?demoLibro " +1500")))
+			(if (eq ?demoNum ?demo) then
+				(bind ?puntuacion (+ ?puntuacion 500))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta dirigido para un publico de tu genero " ?demoLibro " +500")))
+			else
+				(bind ?puntuacion (- ?puntuacion 500))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico de tu genero " ?demoLibro " -500")))
+			)
+		)
+		(if (> (round ?demoNum) (round ?demo) ) then
+			(bind ?puntuacion (- ?puntuacion 3000))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico como tu, no es seguro recomendarte esto" ?demoLibro " -3000")))
+		)
+		(if (< (round ?demoNum) (round ?demo) ) then
+			(bind ?puntuacion (- ?puntuacion 250))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico como tu, pero eres apto de este contenido:" ?demoLibro " -250")))
+		)
+	)
+	(if (eq ?class "Tamano") then 
+		(bind ?demoLibro (send ?curr-atr get-nombre))
+		(if (eq ?port "Alta") then
+			(if (eq ?demoLibro "Grande") then
+				(bind ?puntuacion (- ?puntuacion 500))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Este libro es muy grande para leerlo fuera de casa" ?demoLibro " -500")))
+			else
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Es pequeno, ideal para leerlo fuera de casa" ?demoLibro)))
+			)
+		else
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No importa el tamaño porque lees en casa:" ?demoLibro)))
+		)
+	)
+	(if (eq ?class "Dificultad") then 
+		(bind ?demoLibro (send ?curr-atr get-nombre))
+		(if (eq ?dif "Alta") then
+			(if (eq ?demoLibro "Dificil") then
+				(bind ?puntuacion (+ ?puntuacion 500))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Coincide con tu habilidad lectora " ?demoLibro " +500")))
+			)
+			(if (eq ?demoLibro "Intermedia") then
+				(bind ?puntuacion (+ ?puntuacion 0))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta por debajo de tus capacidades, pero no es un problema " ?demoLibro " +0")))
+			)
+			(if (eq ?demoLibro "Facil") then
+				(bind ?puntuacion (- ?puntuacion 500))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Estas mas que capacitado para leerlo, te puede resultar simple " ?demoLibro " -500")))
+			)
+		)
+		(if (eq ?dif "Media") then
+			(if (eq ?demoLibro "Dificil") then
+				(bind ?puntuacion (- ?puntuacion 1000))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta por encima de tus capacidades " ?demoLibro " -1000")))
+			)
+			(if (eq ?demoLibro "Intermedia") then
+				(bind ?puntuacion (+ ?puntuacion 500))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Coincide con tu habilidad lectora " ?demoLibro " +500")))
+			)
+			(if (eq ?demoLibro "Facil") then
+				(bind ?puntuacion (+ ?puntuacion 0))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta por debajo de tus capacidades, pero no es un problema " ?demoLibro " +0")))
+			)
+		)
+		(if (eq ?dif "Baja") then
+			(if (eq ?demoLibro "Dificil") then
+				(bind ?puntuacion (- ?puntuacion 3000))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta MUY por encima de tus capacidades " ?demoLibro " -3000")))
+			)
+			(if (eq ?demoLibro "Intermedia") then
+				(bind ?puntuacion (- ?puntuacion 1000))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta por encima de tus capacidades " ?demoLibro " -1000")))
+			)
+			(if (eq ?demoLibro "Facil") then
+				(bind ?puntuacion (+ ?puntuacion 500))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Coincide con tu habilidad lectora " ?demoLibro " +500")))
+			)
+		)
+	)
+  )
+
+  (bind ?res (create$ ?puntuacion ?razones))
+  (return ?res)
+)
+
+
+(defrule solucionAbstracta "Funcion de refinamiento"
+	(declare (salience 80))
+	?abs <- (abstracciones (demografia ?demo) (dificultad ?dif) (portabilidad ?port))
+	?recom <- (recomendaciones)
+	?f <- (do abastracta)
+	=>
+	(bind $?respuesta (create$ ))
+	(bind $?obj-libros (find-all-instances ((?inst NovelaFiccion)) TRUE))
+	(loop-for-count (?i 1 (length$ $?obj-libros)) do
+		(bind ?curr-obj (nth$ ?i ?obj-libros))
+		(bind $?carInst (send ?curr-obj get-tieneCaracteristica))
+		(bind ?cosas (puntuacionAbstracta ?demo ?dif ?port ?carInst))
+		(bind ?punt (nth$ 1 ?cosas))
+		(bind ?razones (delete$ ?cosas 1 1))
+		(send ?curr-obj put-puntuacion ?punt)
+
+		(send ?curr-obj put-razones ?razones)
+		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-obj))
+	)
+    (modify ?recom (libros ?respuesta))
+	(retract ?f)
+)
+
+(defrule conjutno-preferencias "Agrupamos las preferencias del lector en una lista para poder usarlas para el refinamiento"
+	(declare (salience 79))
 	?u <- (preferencias (generos $?generos)(autores $?autores)(temas $?temas))
 	?pref <- (prefvar)
 	?f <- (do conjunto)
@@ -433,57 +557,69 @@
 		(bind ?curr-atr (nth$ ?i $?temas))
 		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
 	)
-	;(assert (conj-pref (pref $?respuesta)))
 	(modify ?pref (pref $?respuesta))
 	(retract ?f)
 )
 
-(deffunction puntuacion (?carInst $?pref)
+(deffunction puntuacion (?carInst $?pref) "Asignamos las puntaciones acorde al refinamiento"
   (bind ?puntuacion 0)
+  (bind $?razones (create$ ))
+
   (loop-for-count (?i 1 (length$ $?pref)) do
     (bind ?curr-atr (nth$ ?i $?pref))
     (if (member$ ?curr-atr ?carInst) then 
-		(if (member$ ?curr-atr ?carInst) then
-			(bind ?class (str-cat(class ?curr-atr)))
-			(if (eq ?class "Genero") then (bind ?puntuacion (+ ?puntuacion 1000)))
-			(if (eq ?class "Tema") then (bind ?puntuacion (+ ?puntuacion 2000)))
-			(if (eq ?class "Autor") then (bind ?puntuacion (+ ?puntuacion 500)))
+		(bind ?class (str-cat(class ?curr-atr)))
+		(if (eq ?class "Genero") then 
+			(bind ?puntuacion (+ ?puntuacion 1000))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Porque te gusta el genero " (send ?curr-atr get-nombre) " +1000"))) 
+		)
+		(if (eq ?class "Tema") then 
+			(bind ?puntuacion (+ ?puntuacion 2000))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Porque te gusta el tema " (send ?curr-atr get-nombre) " +2000")))
+		)
+		(if (eq ?class "Autor") then (
+			bind ?puntuacion (+ ?puntuacion 500)) 
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Porque te gusta el autor " (send ?curr-atr get-nombre) " +500")))
 		)
     )
   )
-  (return ?puntuacion)
+
+  (bind ?res (create$ ?puntuacion ?razones))
+  (return ?res)
 )
 
-(deffunction sort_puntuacion (?c1 ?c2)
+(deffunction sort_puntuacion (?c1 ?c2) "Funcion de comparacion especifica para ordenar una lsita de intancias de libros atraves de su puntuacion"
 	(< (send ?c1 get-puntuacion) (send ?c2 get-puntuacion))
 )
 
-(defrule libros-recomendados
+(defrule libros-recomendados "Funcion de refinamiento"
+	(declare (salience 78))
 	?u <- (prefvar (pref $?pref))
-	?recom <- (recomendaciones)
+	?recom <- (recomendaciones (libros $?libros))
 	?f <- (do recomendados)
 	=>
 	(bind $?respuesta (create$ ))
-	(bind $?obj-libros (find-all-instances ((?inst NovelaFiccion)) TRUE))
-	(loop-for-count (?i 1 (length$ $?obj-libros)) do
-		(bind ?curr-obj (nth$ ?i ?obj-libros))
+
+	(loop-for-count (?i 1 (length$ $?libros)) do
+		(bind ?curr-obj (nth$ ?i ?libros))
 		(bind $?carInst (send ?curr-obj get-tieneCaracteristica))
-		(bind ?punt (puntuacion $?carInst $?pref))
+		(bind ?cosas (puntuacion $?carInst $?pref))
+		(bind ?punt (nth$ 1 ?cosas))
 		(if (> ?punt 0) then
-			(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-obj))
-			(send ?curr-obj put-puntuacion ?punt)
+			(bind ?razones (delete$ ?cosas 1 1))
+			(send ?curr-obj put-puntuacion (+ ?punt (send ?curr-obj get-puntuacion)))
+
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (send ?curr-obj get-razones)))
+			(send ?curr-obj put-razones ?razones)
+			;(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-obj))
 		)
 	)
-	(bind $?respuesta (sort sort_puntuacion $?respuesta))
-    (modify ?recom (libros ?respuesta))
+
+	(bind $?libros (sort sort_puntuacion $?libros))
+    (modify ?recom (libros ?libros))
 	(retract ?f)
 	(focus RESPUESTA)
 )
-
-; *******************************************************
-;               	ASSIGNACIONES               
-; *******************************************************
-;(defmodule ASSIGNACIO (import MAIN ?ALL) (import PREGUNTAS ?ALL)(import INFERENCIA ?ALL)(export ?ALL))
 
 ; *******************************************************
 ;               	RESPUESTA               
@@ -502,13 +638,29 @@
   (printout t crlf)
 )
 
+(deffunction razonesPreferencias (?carInst ?type)
+  (loop-for-count (?i 1 (length$ $?carInst)) do
+    (bind ?curr-atr (nth$ ?i $?carInst))
+	(bind ?class (str-cat(class ?curr-atr)))
+	(if (eq ?class ?type) then 
+		(printout t " " (send ?curr-atr get-nombre))
+	)
+  )
+  (printout t crlf)
+)
+
 (deffunction printRazones (?book ?carInst)
 	(printout t crlf)
 	(bind ?punt (send ?book get-puntuacion))
-	(printout t "Este libro tiene una puntacion de recomendacion del: " ?punt  crlf)
-	(if (< ?punt 4000) then 
-		
-	)
+	(printout t "Este libro tiene una puntacion de recomendacion de: " ?punt  crlf)
+	;(if (> ?punt 4000) then )
+	(printout t "Las razones de su recomendacion son la siguientes:" crlf)
+	(bind ?rec (send ?book get-razones))
+	(loop-for-count (?i 1 (length$ $?rec)) do
+		(printout t "-")
+		(bind ?curr-atr (nth$ ?i $?rec))
+		(printout t ?curr-atr  crlf)
+ 	)
 	(printout t crlf)
 )
 
@@ -532,7 +684,9 @@
 	=>
 	(printout t crlf)
 	(printout t "A partir de tus gustos y caracteriseticas te recomendamos: " crlf)
+	(printout t "-------------------------------------------------------------------------------" crlf crlf)
 	(loop-for-count (?i 1 3) do
+		(printout t "LIBRO " ?i crlf)
 		(bind ?curr-obj (nth$ ?i $?libros))
 		(printBook ?curr-obj)
 	)

@@ -103,6 +103,10 @@
         (type INTEGER)
         (create-accessor read-write)
     )
+    (multislot razones
+        (type STRING)
+        (create-accessor read-write)
+    )
 )
 
 (definstances instances
