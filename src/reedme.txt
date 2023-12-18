@@ -6,4 +6,4 @@ Para ejecutar el programa de manera autonoma: ./run.sh
 
 Para ejecutar cualquier juego de pruebas: ./JuegoX.sh
 
-Si se ejecuta desde un SO de Windows, con abrir el test.bat en el programa de CLIPS se podra ver un juego de pruebas hecho para la debugacion de codigo.
+Si se ejecuta desde un SO de Windows, con abrir el test.bat en el programa de CLIPS se podra ver un juego de pruebas hecho para la debugacion de codigo. Aunque no es recomendable abrirlo ya que esta usando un path absoluto.
