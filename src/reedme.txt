@@ -4,6 +4,6 @@ El codigo realizado para el conjunto de libros y autores es: random.cc
 
 Para ejecutar el programa de manera autonoma: ./run.sh
 
-Para ejecutar cualquier juego de pruebas: ./JuegoX.sh
+Para ejecutar cualquier juego de pruebas: ./Juegos.sh X (Donde X puede ser desde 1 hasta 6)
 
-Si se ejecuta desde un SO de Windows, con abrir el test.bat en el programa de CLIPS se podra ver un juego de pruebas hecho para la debugacion de codigo. Aunque no es recomendable abrirlo ya que esta usando un path absoluto.
+(En esta carpeta hay un .zip de la entrega del punto extra, no es necesario abrirlo)

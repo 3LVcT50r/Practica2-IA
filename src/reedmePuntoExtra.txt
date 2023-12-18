@@ -1,5 +1,0 @@
-Este es el prototipo de nuestro trabajo de IA. Tenemos un generador de libros aleatorios que es el .cc y las intancias y las reglas en los clp.
-Por ahora, este prototipo te hace unas preguntas (no son las definitivas pero si son una aproximacion de lo que vamos a entregar al final) para saber tus gustos y hace una inferencia muy simple para recomendar 3 libros dadas las preguntas hechas previamente.
-
-Tambien tenemos un ejecutable de bash para los usuarios de linux. Con usar ./run.sh se iniciara el programa de clips.
-A mas, tenemos un ejerutable que, por ahora, solo ejecuta un Juego de pruebas. Con el comando ./Juego1.sh se ejecutara.
