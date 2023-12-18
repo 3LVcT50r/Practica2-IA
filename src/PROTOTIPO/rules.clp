@@ -125,14 +125,11 @@
 	(multislot temas (type INSTANCE))
 	(multislot autores (type INSTANCE))
 	(multislot generos (type INSTANCE))
-	(slot tamano (type INTEGER))
 	(multislot popularidad (type INSTANCE)) ;La popularidad es una instancia
 	(slot valoracion (type INTEGER))
-	;(slot demografia (type STRING))
-	;(slot dificultad (type STRING))
 )
 
-(deftemplate MAIN::abstracciones		;
+(deftemplate MAIN::abstracciones
 	(slot demografia (type FLOAT))
 	(slot dificultad (type STRING))
 	(slot portabilidad (type STRING))
@@ -182,7 +179,7 @@
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
-	(bind ?edad (ask-int "Cuantos años tienes? "))
+	(bind ?edad (ask-int "Que edad tienes? "))
 	;(if (> ?age 0) then (printout t crlf "Lo sentimos, no cumples con los requisitos de edad" crlf)(exit))
     (send ?x put-edad ?edad)
 )
@@ -245,7 +242,7 @@
 	?pref <- (preferencias)
 	?f <- (valoracion ask)
 	=>
-	(bind ?valo (ask-int "Que valoracion minima es para ti lo minimo que quieres leer? [1-5]: " ))
+	(bind ?valo (ask-int "Que valoracion minima es para ti lo minimo que quieres leer? [0-5]: " ))
 	(modify ?pref (valoracion ?valo))
 	(retract ?f)
 )
@@ -414,7 +411,7 @@
 	(do recomendados)
 )
 
-(deffunction puntuacionAbstracta (?demo ?dif ?port ?carInst) "Asignamos las puntaciones para generar una solucion abstracta"
+(deffunction puntuacionAbstracta (?demo ?dif ?port ?carInst) "Asignamos las puntaciones para generar una solucion abstracta (Asociacion heuristica)"
   (bind ?puntuacion 0)
   (bind $?razones (create$ ))
   (bind ?demoLibro )
@@ -460,7 +457,7 @@
 				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Es pequeno, ideal para leerlo fuera de casa" ?demoLibro)))
 			)
 		else
-			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No importa el tamaño porque lees en casa:" ?demoLibro)))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No importa el tamano porque lees en casa:" ?demoLibro)))
 		)
 	)
 	(if (eq ?class "Dificultad") then 
@@ -540,7 +537,7 @@
 
 (defrule conjutno-preferencias "Agrupamos las preferencias del lector en una lista para poder usarlas para el refinamiento"
 	(declare (salience 79))
-	?u <- (preferencias (generos $?generos)(autores $?autores)(temas $?temas))
+	?u <- (preferencias (generos $?generos)(autores $?autores)(temas $?temas)(popularidad $?popus)(valoracion ?valo))
 	?pref <- (prefvar)
 	?f <- (do conjunto)
 	=>
@@ -557,18 +554,34 @@
 		(bind ?curr-atr (nth$ ?i $?temas))
 		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
 	)
+	(loop-for-count (?i 1 (length$ $?popus)) do
+		(bind ?curr-atr (nth$ ?i $?popus))
+		(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?curr-atr))
+	)
+	(bind $?respuesta(insert$ $?respuesta (+ (length$ $?respuesta) 1) ?valo))
 	(modify ?pref (pref $?respuesta))
 	(retract ?f)
 )
 
-(deffunction puntuacion (?carInst $?pref) "Asignamos las puntaciones acorde al refinamiento"
+(deffunction puntuacion (?valo ?carInst $?pref) "Asignamos las puntaciones acorde al refinamiento"
   (bind ?puntuacion 0)
   (bind $?razones (create$ ))
 
   (loop-for-count (?i 1 (length$ $?pref)) do
     (bind ?curr-atr (nth$ ?i $?pref))
+	(bind ?class (str-cat(class ?curr-atr)))
+
+	(if (eq ?class "INTEGER") then 
+		(if (>= ?valo ?curr-atr ) then
+			(bind ?puntuacion (+ ?puntuacion 500))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Admite tu valoracion minima (tu valoracion " ?curr-atr ") +500")))
+		else
+			(bind ?puntuacion (- ?puntuacion 500))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta por debajo de tu valoracion ideal (tu valoracion " ?curr-atr ") -500")))
+		)
+	)
+
     (if (member$ ?curr-atr ?carInst) then 
-		(bind ?class (str-cat(class ?curr-atr)))
 		(if (eq ?class "Genero") then 
 			(bind ?puntuacion (+ ?puntuacion 1000))
 			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Porque te gusta el genero " (send ?curr-atr get-nombre) " +1000"))) 
@@ -580,6 +593,10 @@
 		(if (eq ?class "Autor") then (
 			bind ?puntuacion (+ ?puntuacion 500)) 
 			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Porque te gusta el autor " (send ?curr-atr get-nombre) " +500")))
+		)
+		(if (eq ?class "Popularidad") then (
+			bind ?puntuacion (+ ?puntuacion 250)) 
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Coincide con la popularidad requerida " (send ?curr-atr get-nombre) " +250")))
 		)
     )
   )
@@ -603,7 +620,8 @@
 	(loop-for-count (?i 1 (length$ $?libros)) do
 		(bind ?curr-obj (nth$ ?i ?libros))
 		(bind $?carInst (send ?curr-obj get-tieneCaracteristica))
-		(bind ?cosas (puntuacion $?carInst $?pref))
+		(bind ?valo (send ?curr-obj get-valoracion))
+		(bind ?cosas (puntuacion ?valo $?carInst $?pref))
 		(bind ?punt (nth$ 1 ?cosas))
 		(if (> ?punt 0) then
 			(bind ?razones (delete$ ?cosas 1 1))
@@ -653,7 +671,23 @@
 	(printout t crlf)
 	(bind ?punt (send ?book get-puntuacion))
 	(printout t "Este libro tiene una puntacion de recomendacion de: " ?punt  crlf)
-	;(if (> ?punt 4000) then )
+
+	(if (> ?punt 4000) then 
+		(printout t "Es una recomendacion muy buena" crlf)
+	)
+	(if (and (> ?punt 2000)  (< ?punt 4000)) then 
+		(printout t "EEs una recomendacion buena" crlf)
+	)
+	(if (and (> ?punt 1000)  (< ?punt 2000)) then 
+		(printout t "Es una recomendacion normal" crlf)
+	)
+	(if (and (> ?punt 0)  (< ?punt 1000)) then 
+		(printout t "Es una recomendacion un poco aleatoria" crlf)
+	)
+	(if (< ?punt 0) then 
+		(printout t "No la recomendamos, pero es lo unico que hay en el sistema" crlf)
+	)
+
 	(printout t "Las razones de su recomendacion son la siguientes:" crlf)
 	(bind ?rec (send ?book get-razones))
 	(loop-for-count (?i 1 (length$ $?rec)) do
@@ -673,6 +707,7 @@
 	(printout t "Temas:") (printInst ?carInst "Tema")
 	(printout t "Demografia:") (printInst ?carInst "Demografia")
 	(printout t "Dificultad:") (printInst ?carInst "Dificultad")
+	(printout t "Valoracion:" (send ?book get-valoracion) crlf) 
 	(printRazones ?book ?carInst)
 	(printout t "-------------------------------------------------------------------------------" crlf)
 )
