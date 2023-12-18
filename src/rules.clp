@@ -168,6 +168,7 @@
 
 
 (defrule PREGUNTAS::askNombre
+	(declare (salience 129))
 	(newLector)
 	=>
 	(bind ?nombre (stringg-question "Como te llamas? "))
@@ -176,6 +177,7 @@
 )
 
 (defrule PREGUNTAS::askEdad
+	(declare (salience 128))
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
@@ -185,6 +187,7 @@
 )
 
 (defrule PREGUNTAS::askSexo
+	(declare (salience 127))
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
@@ -194,6 +197,7 @@
 
 ;;ESTO NO VA A COMPILAR HASTA QUE SE LE AGREGUE UNA FRECUENCIA AL LECTOR
 (defrule PREGUNTAS::askFrecuencia
+	(declare (salience 126))
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
@@ -203,6 +207,7 @@
 
 ;;ESTO SOLO SI AGREGAMOS EL PARAMETRO TAMAnO
 (defrule PREGUNTAS::askLugar
+	(declare (salience 125))
 	(newLector)
     ?x <- (object(is-a Lector))
 	=>
@@ -213,6 +218,7 @@
 )
 
 (defrule PREGUNTAS::askPopularidad
+	(declare (salience 124))
     (newLector)
 	?pref <- (preferencias)
 	?f <- (popularidad ask)
@@ -238,6 +244,7 @@
 )
 
 (defrule PREGUNTAS::askValoracion
+	(declare (salience 123))
 	(newLector)
 	?pref <- (preferencias)
 	?f <- (valoracion ask)
@@ -248,6 +255,7 @@
 )
 
 (defrule PREGUNTAS::askAutores
+	(declare (salience 122))
     (newLector)
 	?pref <- (preferencias)
 	?f <- (autores ask)
@@ -274,6 +282,7 @@
 )
 
 (defrule PREGUNTAS::askGenero
+	(declare (salience 121))
     (newLector)
 	?pref <- (preferencias)
 	?f <- (genero ask)
@@ -300,6 +309,7 @@
 )
 
 (defrule PREGUNTAS::askTema
+	(declare (salience 120))
     (newLector)
 	?pref <- (preferencias)
 	?f <- (tema ask)
@@ -340,6 +350,7 @@
 )
 
 (defrule decideDemografia
+	(declare (salience 102))
 	(newLector)
 	?x <- (object(is-a Lector))
 	?abss <- (abstracciones)
@@ -347,18 +358,19 @@
 	=>
 	(bind ?edada (send ?x get-edad))
 	(bind ?sexoe (send ?x get-sexo))
-	(if (< ?edada 8) then (modify ?abss (demografia 0.0))
-	else (if (< ?edada 18) then
-		(if (eq ?sexoe 1) then (modify ?abss (demografia 1.0))
-			else (modify ?abss (demografia 1.5)))
-		else (if (eq ?sexoe 1) then (modify ?abss (demografia 2.0))
-				else (modify ?abss (demografia 2.5))))
-	)
+
+	(if (and (> ?edada 16) (eq ?sexoe FALSE)) then (modify ?abss (demografia 2.5)))
+	(if (and (> ?edada 16) (eq ?sexoe TRUE)) then (modify ?abss (demografia 2.0)))
+	(if (and (> ?edada 8)  (< ?edada 16) (eq ?sexoe FALSE)) then (modify ?abss (demografia 1.5)))
+	(if (and (> ?edada 8)  (< ?edada 16) (eq ?sexoe TRUE)) then (modify ?abss (demografia 1.0)))
+	(if (and (> ?edada 0)  (< ?edada 8) ) then (modify ?abss (demografia 0.0)))
+
 	(retract ?f)
 	;(focus INFERENCIA)
 )
 
 (defrule decideDificultat
+	(declare (salience 101))
 	(newLector)
 	?x <- (object(is-a Lector))
 	?abss <- (abstracciones)
@@ -384,13 +396,14 @@
 )
 
 (defrule decidePortabilidad
+	(declare (salience 100))
 	(newLector)
 	?x <- (object(is-a Lector))
 	?abss <- (abstracciones)
 	?f <- (port abas)
 	=>
 	(bind ?lug (send ?x get-lugar))
-	(if (eq lug 1) then (modify ?abss (portabilidad "Alta"))
+	(if (eq ?lug 1) then (modify ?abss (portabilidad "Alta"))
 	else (modify ?abss (portabilidad "Baja"))
 	)
 
@@ -411,6 +424,14 @@
 	(do recomendados)
 )
 
+(deffunction floorNumber (?numero)
+  (if (eq ?numero 0.0) then (return 0.0))
+  (if (eq ?numero 1.0) then (return 1.0))
+  (if (eq ?numero 1.5) then (return 1.0))
+  (if (eq ?numero 2.0) then (return 2.0))
+  (if (eq ?numero 2.5) then (return 2.0))
+)
+
 (deffunction puntuacionAbstracta (?demo ?dif ?port ?carInst) "Asignamos las puntaciones para generar una solucion abstracta (Asociacion heuristica)"
   (bind ?puntuacion 0)
   (bind $?razones (create$ ))
@@ -421,13 +442,13 @@
 	(bind ?class (str-cat(class ?curr-atr)))
 	(if (eq ?class "Demografia") then 
 		(bind ?demoLibro (send ?curr-atr get-nombre))
-		(if (eq ?demoLibro "Infantil") then (bind ?demoNum 0))
-		(if (eq ?demoLibro "Juvenil_femenina") then (bind ?demoNum 1))
+		(if (eq ?demoLibro "Infantil") then (bind ?demoNum 0.0))
+		(if (eq ?demoLibro "Juvenil_femenina") then (bind ?demoNum 1.0))
 		(if (eq ?demoLibro "Juvenil_masculina") then (bind ?demoNum 1.5))
-		(if (eq ?demoLibro "Adulta_femenina") then (bind ?demoNum 2))
+		(if (eq ?demoLibro "Adulta_femenina") then (bind ?demoNum 2.0))
 		(if (eq ?demoLibro "Adulta_masculina") then (bind ?demoNum 2.5))
-		
-		(if (eq (round ?demoNum) (round ?demo) ) then
+
+		(if (eq (floorNumber ?demoNum) (floorNumber ?demo) ) then
 			(bind ?puntuacion (+ ?puntuacion 1500))
 			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Esta dirigido para un publico de tu edad " ?demoLibro " +1500")))
 			(if (eq ?demoNum ?demo) then
@@ -438,13 +459,13 @@
 				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico de tu genero " ?demoLibro " -500")))
 			)
 		)
-		(if (> (round ?demoNum) (round ?demo) ) then
+		(if (> (floorNumber ?demoNum) (floorNumber ?demo) ) then
 			(bind ?puntuacion (- ?puntuacion 3000))
-			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico como tu, no es seguro recomendarte esto" ?demoLibro " -3000")))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico como tu, no es seguro recomendarte esto " ?demoLibro " -3000")))
 		)
-		(if (< (round ?demoNum) (round ?demo) ) then
+		(if (< (floorNumber ?demoNum) (floorNumber ?demo) ) then
 			(bind ?puntuacion (- ?puntuacion 250))
-			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico como tu, pero eres apto de este contenido:" ?demoLibro " -250")))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No esta dirigido para un publico como tu, pero eres apto de este contenido: " ?demoLibro " -250")))
 		)
 	)
 	(if (eq ?class "Tamano") then 
@@ -452,12 +473,12 @@
 		(if (eq ?port "Alta") then
 			(if (eq ?demoLibro "Grande") then
 				(bind ?puntuacion (- ?puntuacion 500))
-				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Este libro es muy grande para leerlo fuera de casa" ?demoLibro " -500")))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Este libro es muy grande para leerlo fuera de casa " ?demoLibro " -500")))
 			else
-				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Es pequeno, ideal para leerlo fuera de casa" ?demoLibro)))
+				(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "Es pequeno, ideal para leerlo fuera de casa " ?demoLibro)))
 			)
 		else
-			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No importa el tamano porque lees en casa:" ?demoLibro)))
+			(bind $?razones(insert$ $?razones (+ (length$ $?razones) 1) (str-cat "No importa el tamano porque lees en casa " ?demoLibro)))
 		)
 	)
 	(if (eq ?class "Dificultad") then 
@@ -676,7 +697,7 @@
 		(printout t "Es una recomendacion muy buena" crlf)
 	)
 	(if (and (> ?punt 2000)  (< ?punt 4000)) then 
-		(printout t "EEs una recomendacion buena" crlf)
+		(printout t "Es una recomendacion buena" crlf)
 	)
 	(if (and (> ?punt 1000)  (< ?punt 2000)) then 
 		(printout t "Es una recomendacion normal" crlf)
